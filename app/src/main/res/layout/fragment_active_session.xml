@@ -1,10 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ConstraintLayout>
-    <TextView android:id="@+id/tv_station_name"/>
-    <TextView android:id="@+id/tv_duration"/>
-    <TextView android:id="@+id/tv_current_power"/>
-    <TextView android:id="@+id/tv_power_consumed"/>
-    <TextView android:id="@+id/tv_tariff"/>
-    <TextView android:id="@+id/tv_total_cost"/>
-    <Button android:id="@+id/btn_stop" android:text="Остановить зарядку"/>
-</ConstraintLayout>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Название станции -->
+        <TextView
+            android:id="@+id/tv_station_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Станция BRYANSKAYA4"/>
+
+        <!-- ID сессии -->
+        <TextView
+            android:id="@+id/tv_session_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/tv_station_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="ID: SESS-123456"/>
+
+        <!-- Разделитель -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/gray_light"
+            app:layout_constraintTop_toBottomOf="@id/tv_session_id"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Продолжительность -->
+        <TextView
+            android:id="@+id/tv_duration_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Продолжительность:"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@id/tv_duration_label"
+            app:layout_constraintStart_toEndOf="@id/tv_duration_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="00:15:30"/>
+
+        <!-- Текущая мощность -->
+        <TextView
+            android:id="@+id/tv_current_power_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Текущая мощность:"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/tv_duration_label"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_current_power"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@id/tv_current_power_label"
+            app:layout_constraintStart_toEndOf="@id/tv_current_power_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="42.5 кВт"/>
+
+        <!-- Потреблено энергии -->
+        <TextView
+            android:id="@+id/tv_power_consumed_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Потреблено:"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/tv_current_power_label"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_power_consumed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@id/tv_power_consumed_label"
+            app:layout_constraintStart_toEndOf="@id/tv_power_consumed_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="10.7 кВт·ч"/>
+
+        <!-- Тариф -->
+        <TextView
+            android:id="@+id/tv_tariff_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Тариф:"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/tv_power_consumed_label"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_tariff"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@id/tv_tariff_label"
+            app:layout_constraintStart_toEndOf="@id/tv_tariff_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="5.5 руб/кВт·ч"/>
+
+        <!-- Стоимость -->
+        <TextView
+            android:id="@+id/tv_total_cost_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Стоимость:"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/tv_tariff_label"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_total_cost"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@id/tv_total_cost_label"
+            app:layout_constraintStart_toEndOf="@id/tv_total_cost_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="58.85 руб"/>
+
+        <!-- Кнопка остановки -->
+        <Button
+            android:id="@+id/btn_stop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Остановить зарядку"
+            android:backgroundTint="@color/green"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_cost_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,34 +22,31 @@ import data.repositories.StationRepository;
 import models.Station;
 import ui.adapters.StationAdapter;
 
-public class FavoritesFragment extends Fragment {
-    private RecyclerView rvFavorites;
-    private StationAdapter adapter;
-    private ImageView ivFavorite;
-    private boolean isFavorite = false; // Временная переменная для примера
+public class FavoritesFragment extends Fragment implements StationAdapter.OnStationClickListener {
+  //  private RecyclerView rvFavorites;
+  //  private StationAdapter adapter;
+  //  private ImageView ivFavorite;
+  //  private boolean isFavorite = false; // Временная переменная для примера
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Надуваем макет фрагмента
+        // макет фрагмента
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
-        rvFavorites = view.findViewById(R.id.rv_favorites);
-        rvFavorites.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerView recyclerView = view.findViewById(R.id.rv_stations);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Получите данные избранных станций из репозитория через единый метод
+        List<Station> favoriteStations = StationRepository.getFavoriteStations();
 
-        // Получите данные избранных станций (пример)
-        List<Station> favoriteStations = getFavoriteStations();
 
-        adapter = new StationAdapter(favoriteStations);
-        rvFavorites.setAdapter(adapter);
+        // Используем общий адаптер
+        StationAdapter adapter = new StationAdapter(favoriteStations, this);
+        recyclerView.setAdapter(new StationAdapter(favoriteStations, this));
         return view;
     }
-    private List<Station> getFavoriteStations() {
-        // Реализуйте получение избранных станций из БД или другого источника
-        return StationRepository.getFavoriteStations();
-    }
-
+    /*
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -82,5 +80,34 @@ public class FavoritesFragment extends Fragment {
 
         ivFavorite.setImageResource(iconRes);
         ivFavorite.setColorFilter(ContextCompat.getColor(requireContext(), colorRes));
+    }
+*/
+
+    @Override
+    public void onStationClick(Station station) {
+        // Переход к детальной информации о станции
+        Bundle args = new Bundle();
+        args.putInt("station_id", station.getId());// "stationId"
+
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_list_to_stationDetails, args);
+    }
+
+    @Override
+    public void onFavoriteClick(Station station) {
+        StationRepository.toggleFavorite(station.getId());
+        // Обновить отображение
+        RecyclerView recyclerView = requireView().findViewById(R.id.rv_stations);
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRouteClick(Station station) {
+        // Построение маршрута через Intent
+        //Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
+        //        station.getLatitude() + "," + station.getLongitude());
+        //Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        //mapIntent.setPackage("com.google.android.apps.maps");
+        //startActivity(mapIntent);
     }
 }

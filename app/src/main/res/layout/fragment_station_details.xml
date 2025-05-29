@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Иконка станции -->
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="52dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_ev_station"
+            android:textColor="@color/text_bold_black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <!-- Название станции -->
+        <TextView
+            android:id="@+id/tv_station_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="@string/station_name"
+            android:textColor="@color/station_name_black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/iv_icon"
+            app:layout_constraintTop_toTopOf="@id/iv_icon"
+            app:layout_constraintEnd_toStartOf="@id/btn_favorite"
+            android:letterSpacing="0.1"
+            />
+
+        <!-- Адрес станции -->
+        <TextView
+            android:id="@+id/tv_station_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/station_address"
+            android:textColor="@color/station_address_gray"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@id/tv_station_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_station_name"
+            android:letterSpacing="0.2"/>
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/status_background"
+            android:padding="4dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/tv_station_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_station_address"/>
+
+        <!-- Кнопка избранного -->
+        <ImageButton
+            android:id="@+id/btn_favorite"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="18dp"
+            android:src="@drawable/ic_favorite_outline"
+            app:layout_constraintBottom_toBottomOf="@id/iv_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/primary"
+            android:background="@color/white"/>
+
+        <!-- Иконка времени работы -->
+        <ImageView
+            android:id="@+id/iv_time"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_worktime"
+            app:layout_constraintStart_toStartOf="@id/iv_icon"
+            app:layout_constraintTop_toBottomOf="@id/iv_icon"
+            app:tint="@color/primary"
+            tools:layout_editor_absoluteX="6dp" />
+
+        <!-- Время работы -->
+        <TextView
+            android:id="@+id/tv_working_hours"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:text="@string/working_time_24"
+            android:textColor="@color/station_name_black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/iv_time"
+            app:layout_constraintBottom_toBottomOf="@id/iv_time"
+            app:layout_constraintEnd_toStartOf="@id/iv_nav"/>
+
+        <!-- Иконка навигации -->
+        <ImageView
+            android:id="@+id/iv_nav"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_navigation"
+            app:layout_constraintEnd_toStartOf="@id/tv_nav"
+            app:layout_constraintTop_toTopOf="@id/tv_working_hours"
+            app:tint="@color/primary" />
+
+        <!-- Текст "Маршрут" -->
+        <TextView
+            android:id="@+id/tv_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="@string/nav"
+            android:textColor="@color/primary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_working_hours"/>
+
+
+
+        <!-- Разделитель -->
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/gray_light"
+            app:layout_constraintTop_toBottomOf="@id/tv_status"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Мощность станции -->
+        <TextView
+            android:id="@+id/tv_power_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/power_title"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/divider1"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_power"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@id/tv_power_label"
+            app:layout_constraintStart_toEndOf="@id/tv_power_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="50 кВт"/>
+
+        <!-- Тариф -->
+        <TextView
+            android:id="@+id/tv_tariff_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/tariff_title"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/tv_power_label"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_tariff"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@id/tv_tariff_label"
+            app:layout_constraintStart_toEndOf="@id/tv_tariff_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/tariff" />
+
+        <!-- Описание месторасположения -->
+        <TextView
+            android:id="@+id/tv_description_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/location_title"
+            android:textColor="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/tv_tariff_label"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_description_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/location"/>
+
+        <!-- Разделитель -->
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/gray_light"
+            app:layout_constraintTop_toBottomOf="@id/tv_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Кнопка "Начать зарядку" -->
+        <Button
+            android:id="@+id/btn_start_charging"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/start_charging"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/divider2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <!-- Статус станции -->
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/status_background"
+            android:padding="4dp"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tv_station_address"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/station_status_free"/>
+
+        <!-- Разделитель -->
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/gray_light"
+            app:layout_constraintTop_toBottomOf="@id/tv_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

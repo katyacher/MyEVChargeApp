@@ -30,21 +30,17 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
         // Получаем данные из репозитория через единый метод
         List<Station> stations = StationRepository.getAllStations();
         // Используем общий адаптер
+        StationAdapter adapter = new StationAdapter(stations, this);
         recyclerView.setAdapter(new StationAdapter(stations, this));
 
         return view;
-    }
-
-    // 4. Получаем данные из репозитория
-    private List<Station> getAllStations() {
-        return StationRepository.getAllStations();
     }
 
     @Override
     public void onStationClick(Station station) {
         // Переход к детальной информации о станции
         Bundle args = new Bundle();
-        args.putInt("station_id", station.getId());
+        args.putInt("station_id", station.getId());// "stationId"
 
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_list_to_stationDetails, args);
@@ -56,5 +52,15 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
         // Обновить отображение
         RecyclerView recyclerView = requireView().findViewById(R.id.rv_stations);
         recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRouteClick(Station station) {
+        // Построение маршрута через Intent
+        //Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
+        //        station.getLatitude() + "," + station.getLongitude());
+        //Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        //mapIntent.setPackage("com.google.android.apps.maps");
+        //startActivity(mapIntent);
     }
 }

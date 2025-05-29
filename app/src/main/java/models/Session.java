@@ -18,11 +18,17 @@ public class Session {
     }
 
     // Расчет продолжительности в минутах
-    public long getDuration() {
-        if (endTime == null) return 0;
-        return (endTime.getTime() - startTime.getTime()) / (60 * 1000);
+    public long getDurationMinutes() {
+        Date end = endTime != null ? endTime : new Date();
+        return (end.getTime() - startTime.getTime()) / (60 * 1000);
+        /*if (endTime == null) return 0;
+        return (endTime.getTime() - startTime.getTime()) / (60 * 1000);*/
     }
-
+    // Форматированная продолжительность (чч:мм)
+    public String getFormattedDuration() {
+        long minutes = getDurationMinutes();
+        return String.format("%02d:%02d", minutes / 60, minutes % 60);
+    }
     // Расчет стоимости
     public double getTotalCost() {
         return powerConsumed * tariff;
@@ -37,7 +43,14 @@ public class Session {
     // Геттеры
     public String getId() { return id; }
     public Station getStation() { return station; }
+    public Date getStartTime(){ return startTime; }
+    public Date getEndTime(){ return endTime; }
     public double getCurrentPower() { return currentPower; }
+    public double getTariff(){ return tariff; }
+    public double getPowerConsumed() { return powerConsumed; }
     public void setCurrentPower(double power) { currentPower = power; }
-    // ... остальные геттеры
+
+
+
+
 }

@@ -5,33 +5,71 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/mapFragment">
 
+    <!-- Экран 1: Карта -->
     <fragment
         android:id="@+id/mapFragment"
         android:name="ui.fragments.MapFragment"
-        android:label="Карта"/>
+        android:label="Карта">
+        <action
+            android:id="@+id/action_map_to_details"
+            app:destination="@id/stationDetailsFragment" />
+    </fragment>
 
+    <!-- Экран 2: Детали станции (Bottom Sheet) -->
+    <dialog
+        android:id="@+id/stationDetailsFragment"
+        android:name="ui.fragments.StationDetailsFragment"
+        android:label="Станция"
+        app:layout="@layout/fragment_station_details">
+        <argument
+            android:name="stationId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_details_to_session"
+            app:destination="@id/activeSessionFragment" />
+    </dialog>
+
+    <!-- Экран 3: Активная сессия (Bottom Sheet) -->
+    <dialog
+        android:id="@+id/activeSessionFragment"
+        android:name="ui.fragments.ActiveSessionFragment"
+        android:label="Зарядка"
+        app:layout="@layout/fragment_active_session">
+        <argument
+            android:name="stationId"
+            app:argType="integer" />
+    </dialog>
+
+    <!-- Экран 4: Список станций -->
     <fragment
         android:id="@+id/listFragment"
         android:name="ui.fragments.ListFragment"
-        android:label="Список"/>
+        android:label="Список">
+        <action
+            android:id="@+id/action_list_to_details"
+            app:destination="@id/stationDetailsFragment" />
+    </fragment>
 
+    <!-- Экран 5: Избранное -->
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="ui.fragments.FavoritesFragment"
-        android:label="Избранное"/>
+        android:label="Избранное">
+        <action
+            android:id="@+id/action_favorites_to_details"
+            app:destination="@id/stationDetailsFragment" />
+    </fragment>
 
+    <!-- Экран 6: Профиль -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="ui.fragments.ProfileFragment"
-        android:label="Профиль"/>
-    <fragment
-        android:id="@+id/stationDetailsFragment"
-        android:name="ui.fragments.StationDetailsFragment"
-        android:label="Детали станции"/>
+        android:label="Профиль" />
 
-    <action
+
+    <!--<action
         android:id="@+id/action_map_to_details"
         app:destination="@id/stationDetailsFragment"
         app:enterAnim="@anim/slide_in_right"
-        app:exitAnim="@anim/slide_out_left" />
+        app:exitAnim="@anim/slide_out_left" /> -->
 </navigation>

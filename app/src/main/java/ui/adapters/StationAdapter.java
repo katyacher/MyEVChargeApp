@@ -16,13 +16,15 @@ import java.util.Random;
 import models.Station;
 
 public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHolder> {
-
-    private final List<Station> stations;
-    private final OnStationClickListener listener;
     public interface OnStationClickListener {
         void onStationClick(Station station);
         void onFavoriteClick(Station station);
+        void onRouteClick(Station station);
     }
+
+    private final List<Station> stations;
+    private final OnStationClickListener listener;
+
     public StationAdapter(List<Station> stations, OnStationClickListener listener) {
         this.stations = stations;
         this.listener = listener;
@@ -37,25 +39,38 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         holder.tvStatus.setText(station.getStatus());
         holder.tvWorkingHours.setText(station.getWorkingHours());
 
-        // Для примера - установка случайного статуса
-        String[] statuses = {"Свободно", "Занято", "Не в сети"};
-        String randomStatus = statuses[new Random().nextInt(3)];
-        holder.tvStatus.setText(randomStatus);
-
         // Установка иконки избранного
         int favoriteIcon = station.isFavorite() ?
                 R.drawable.ic_favorite_filled : R.drawable.ic_favorite_outline;
         holder.btnFavorite.setImageResource(favoriteIcon);
 
+
+        // Обработчики кликов
+        holder.itemView.setOnClickListener(v -> {
+            listener.onStationClick(station);
+        });
+
+        holder.btnFavorite.setOnClickListener(v -> {
+            listener.onFavoriteClick(station);
+        });
+
+        holder.tvNav.setOnClickListener(v -> {
+            listener.onRouteClick(station);
+        });
+
+        // установка случайного статуса
+        String[] statuses = {"Свободно", "Занято", "Не в сети"};
+        String randomStatus = statuses[new Random().nextInt(3)];
+        holder.tvStatus.setText(randomStatus);
+
         // Привязка данных
        /* holder.tvName.setText(station.getName());
         holder.tvStatus.setText(station.getStatus());
+
         holder.btnRoute.setOnClickListener(v -> {
             // Обработка клика на кнопке маршрута
             // station.getLatitude()/getLongitude()
         });
-        */
-
 
         // Обработчики кликов
         holder.itemView.setOnClickListener(v -> {
@@ -76,12 +91,12 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
             holder.btnFavorite.setImageResource(iconRes);
             notifyItemChanged(position);
-        });
+        });   */
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        public View tvNav;
         TextView tvStationName, tvStationAddress, tvWorkingHours, tvStatus;
         ImageButton btnFavorite;
-        //TextView tvName;
         //Button btnRoute;
 
         public ViewHolder(View view) {
@@ -102,8 +117,6 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
                 .inflate(R.layout.item_station, parent, false);
         return new ViewHolder(view);
     }
-
-
 
     @Override
     public int getItemCount() {

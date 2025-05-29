@@ -6,7 +6,7 @@ import java.util.List;
 import models.Station;
 
 public class StationRepository {
-    private static final List<Station> stations = new ArrayList<>();
+    private static List<Station> stations = new ArrayList<>();
 
 
     static {
@@ -16,6 +16,7 @@ public class StationRepository {
                 "free",
                 "Красноярск, ул. Брянская, 4",
                 "Круглосуточно",
+                56.012345, 92.987654,
                 "Парковка торгового центра 'Планета'",
                 50.0, // мощность 50 кВт
                 5.5 // тариф 5.5 руб/кВт·ч
@@ -27,6 +28,7 @@ public class StationRepository {
                 "Свободно",
                 "Красноярск, ул. Мира, 55",
                 "Круглосуточно",
+                56.012345, 92.987654,
                 "Парковка торгового центра 'Планета'",
                 50.0, // мощность 50 кВт
                 5.5 // тариф 5.5 руб/кВт·ч
@@ -38,6 +40,7 @@ public class StationRepository {
                 "free",
                 "Красноярск, пр. 9 Мая, 77",
                 "Круглосуточно",
+                56.012345, 92.987654,
                 "Парковка торгового центра 'Планета'",
                 50.0, // мощность 50 кВт
                 5.5 // тариф 5.5 руб/кВт·ч
@@ -49,6 +52,7 @@ public class StationRepository {
                 "offline",
                 "Красноярск, ул.Профсоюзов, 64",
                 "8:00-22:00",
+                56.012345, 92.987654,
                 "Парковка торгового центра 'Планета'",
                 50.0, // мощность 50 кВт
                 5.5 // тариф 5.5 руб/кВт·ч
@@ -60,6 +64,7 @@ public class StationRepository {
                 "Занято",
                 "Красноярск, ул. Мичурина, 2Г",
                 "8:00-22:00",
+                56.012345, 92.987654,
                 "Парковка торгового центра 'Планета'",
                 50.0, // мощность 50 кВт
                 5.5 // тариф 5.5 руб/кВт·ч
@@ -79,7 +84,14 @@ public class StationRepository {
         }
         return favorites;
     }
-
+    public static Station getStationById(int id) {
+        for (Station station : stations) {
+            if (station.getId() == id) {
+                return station;
+            }
+        }
+        return null;
+    }
     public static void toggleFavorite(int stationId) {
         for (Station station : stations) {
             if (station.getId() == stationId) {

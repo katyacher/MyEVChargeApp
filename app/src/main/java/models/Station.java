@@ -14,13 +14,15 @@ public class Station {
 
     // Конструктор
     public Station(int id, String name, String status, String address,
-                   String workingHours, String locationDescription,
+                   String workingHours, double latitude, double longitude, String locationDescription,
                    double power, double tariff) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.address = address;
         this.workingHours = workingHours;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.locationDescription = locationDescription;
         this.power = power;
         this.tariff = tariff;
