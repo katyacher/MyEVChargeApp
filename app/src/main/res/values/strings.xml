@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <string name="map">Карта</string>
+    <string name="list">Список станций</string>
+    <string name="favorites">Избранное</string>
+    <string name="profile">Мой профиль</string>
+
+    <string name="phone">+7 999 999–99–99</string>
+    <string name="email">user@example.com</string>
+    <string name="history">История зарядок</string>
+
+    <string name="working_time_24">Круглосуточно</string>
+    <string name="working_time_6_to_18">6:00–18:00</string>
+    <string name="working_time_9_to_21">9:00–21:00</string>
+    <string name="favorites_empty">Добавьте станции в избранное</string>
+    <string name="nav">Маршрут</string>
+
+    <string name="station_status_free">Свободно</string>
+    <string name="station_status_busy">Занято</string>
+    <string name="station_status_offline">Не в сети</string>
+
+    <string name="station_name">BRYNSKAYA4 #15</string>
+    <string name="station_address"> Красноярск, ул.Брянская, 4</string>
+</resources>

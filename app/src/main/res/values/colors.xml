@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#388E3C</color>
+    <color name="accent">#FF4081</color>
+    <color name="primary1">#DA6B5C</color>
+    <color name="green">#DA6B5C</color>
+    <color name="red_station_status">#DA6B5C</color>
+    <color name="gray">#CACACA</color>
+    <color name="light_green_station">#DAF5DB</color>
+    <color name="green_firm_station">#78A55A</color>
+    <color name="menu_item_gray">#8E8C8C</color>
+    <color name="menu_icon_gray">#666666</color>
+    <color name="light_gray_station">#E6E6E6</color>
+    <color name="station_elipse_gray">#D2E0D3</color>
+    <color name="station_border_gray">#D8D8D8</color>
+    <color name="button_green">#6CC070</color>
+    <color name="text_bold_black">#4E4A4A</color>
+    <color name="station_name_black">#242222</color>
+    <color name="station_address_gray">#AAAAAA</color>
+
+    <color name="status_free">#4CAF50</color>
+    <color name="status_busy">#DA6B5C</color>
+    <color name="status_offline">#757575</color>
+
+</resources>

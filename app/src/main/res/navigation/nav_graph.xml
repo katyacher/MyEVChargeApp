@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mapFragment">
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="ui.fragments.MapFragment"
+        android:label="Карта"/>
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="ui.fragments.ListFragment"
+        android:label="Список"/>
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="ui.fragments.FavoritesFragment"
+        android:label="Избранное"/>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="ui.fragments.ProfileFragment"
+        android:label="Профиль"/>
+    <fragment
+        android:id="@+id/stationDetailsFragment"
+        android:name="ui.fragments.StationDetailsFragment"
+        android:label="Детали станции"/>
+
+    <action
+        android:id="@+id/action_map_to_details"
+        app:destination="@id/stationDetailsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left" />
+</navigation>

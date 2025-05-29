@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConstraintLayout>
+    <TextView android:id="@+id/tv_station_name"/>
+    <TextView android:id="@+id/tv_duration"/>
+    <TextView android:id="@+id/tv_current_power"/>
+    <TextView android:id="@+id/tv_power_consumed"/>
+    <TextView android:id="@+id/tv_tariff"/>
+    <TextView android:id="@+id/tv_total_cost"/>
+    <Button android:id="@+id/btn_stop" android:text="Остановить зарядку"/>
+</ConstraintLayout>
