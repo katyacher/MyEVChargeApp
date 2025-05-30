@@ -44,7 +44,8 @@
     <fragment
         android:id="@+id/listFragment"
         android:name="ui.fragments.ListFragment"
-        android:label="Список">
+        android:label="Список"
+        app:layout="@layout/fragment_list">
         <action
             android:id="@+id/action_list_to_details"
             app:destination="@id/stationDetailsFragment" />
@@ -54,7 +55,8 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="ui.fragments.FavoritesFragment"
-        android:label="Избранное">
+        android:label="Избранное"
+        app:layout="@layout/fragment_favorites">
         <action
             android:id="@+id/action_favorites_to_details"
             app:destination="@id/stationDetailsFragment" />
@@ -64,7 +66,8 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="ui.fragments.ProfileFragment"
-        android:label="Профиль" />
+        android:label="Профиль"
+        app:layout="@layout/fragment_profile"/>
 
 
     <!--<action
