@@ -1,50 +1,77 @@
-<!-- fragment_profile.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="16dp">
 
-        <!-- Блок информации -->
-        <!-- Заголовок -->
+        <!-- Заголовок профиля -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/profile"
-            android:textSize="24sp"/>
+            android:text="@string/profile_title"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Информация о пользователе -->
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            tools:text="user@example.com"/>
 
         <TextView
             android:id="@+id/tv_phone"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/phone"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginBottom="24dp"
+            tools:text="+7 (XXX) XXX-XX-XX"/>
 
+        <!-- Заголовок истории -->
         <TextView
-            android:id="@+id/tv_email"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/email"
-            android:layout_marginTop="16dp"/>
-
-        <!-- История зарядок -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/history"
+            android:text="@string/session_history"
             android:textSize="20sp"
-            android:layout_marginTop="32dp"/>
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
 
+        <!-- Список истории сессий -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"/>
+            android:padding="8dp"/>
+
+        <!-- Переключатель языка -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/language_setting"
+                android:textSize="18sp"/>
+
+            <Switch
+                android:id="@+id/switch_language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
 
     </LinearLayout>
-
 </ScrollView>

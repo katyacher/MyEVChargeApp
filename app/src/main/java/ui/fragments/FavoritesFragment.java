@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -27,6 +29,8 @@ public class FavoritesFragment extends Fragment implements StationAdapter.OnStat
   //  private StationAdapter adapter;
   //  private ImageView ivFavorite;
   //  private boolean isFavorite = false; // Временная переменная для примера
+    private RecyclerView recyclerView;
+    private TextView tvEmptyState;
 
     @Nullable
     @Override
@@ -35,17 +39,29 @@ public class FavoritesFragment extends Fragment implements StationAdapter.OnStat
                              @Nullable Bundle savedInstanceState) {
         // макет фрагмента
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.rv_stations);
+        recyclerView = view.findViewById(R.id.rv_favorites);
+        tvEmptyState = view.findViewById(R.id.tv_empty_state);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // Получите данные избранных станций из репозитория через единый метод
         List<Station> favoriteStations = StationRepository.getFavoriteStations();
+        updateUI(favoriteStations);
 
-
-        // Используем общий адаптер
-        StationAdapter adapter = new StationAdapter(favoriteStations, this);
-        recyclerView.setAdapter(new StationAdapter(favoriteStations, this));
         return view;
     }
+    private void updateUI(List<Station> favoriteStations) {
+        if (favoriteStations.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            tvEmptyState.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            tvEmptyState.setVisibility(View.GONE);
+            // Используем общий адаптер
+            StationAdapter adapter = new StationAdapter(favoriteStations, this);
+            recyclerView.setAdapter(adapter);
+        }
+    }
+
     /*
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -87,18 +103,18 @@ public class FavoritesFragment extends Fragment implements StationAdapter.OnStat
     public void onStationClick(Station station) {
         // Переход к детальной информации о станции
         Bundle args = new Bundle();
-        args.putInt("station_id", station.getId());// "stationId"
+        args.putInt("stationId", station.getId());// "station_id"
 
         Navigation.findNavController(requireView())
-                .navigate(R.id.action_list_to_stationDetails, args);
+                .navigate(R.id.action_favorites_to_details, args);
     }
 
     @Override
     public void onFavoriteClick(Station station) {
         StationRepository.toggleFavorite(station.getId());
-        // Обновить отображение
-        RecyclerView recyclerView = requireView().findViewById(R.id.rv_stations);
-        recyclerView.getAdapter().notifyDataSetChanged();
+        // Обновляем список избранных
+        List<Station> updatedFavorites = StationRepository.getFavoriteStations();
+        updateUI(updatedFavorites);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
         args.putInt("station_id", station.getId());// "stationId"
 
         Navigation.findNavController(requireView())
-                .navigate(R.id.action_list_to_stationDetails, args);
+                .navigate(R.id.action_list_to_details, args);
     }
 
     @Override

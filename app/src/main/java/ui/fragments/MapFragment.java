@@ -14,7 +14,7 @@ import com.yandex.mapkit.mapview.MapView;
 import data.repositories.StationRepository;
 import models.Station;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment {} /*implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
     private MapView mapView;
@@ -63,3 +63,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
     // ... остальные методы жизненного цикла
 }
+*/

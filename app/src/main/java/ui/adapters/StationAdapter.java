@@ -1,5 +1,6 @@
 package ui.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         void onRouteClick(Station station);
     }
 
-    private final List<Station> stations;
+    private List<Station> stations;
     private final OnStationClickListener listener;
 
     public StationAdapter(List<Station> stations, OnStationClickListener listener) {
@@ -30,6 +31,11 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateStations(List<Station> newStations) {
+        this.stations = newStations;
+        notifyDataSetChanged();
+    }
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Station station = stations.get(position);
