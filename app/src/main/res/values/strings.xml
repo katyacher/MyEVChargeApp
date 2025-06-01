@@ -35,6 +35,9 @@
     <string name="stop_charging">Остановить зарядку</string>
 
     <string name="profile_title">Мой профиль</string>
+    <string name="phone_label">Телефон</string>
+    <string name="email_label">Почта</string>
+    <string name="settings_title">Настройки</string>
     <string name="language_setting">Язык (English/Russian)</string>
     <string name="session_history">История зарядок</string>
 </resources>
