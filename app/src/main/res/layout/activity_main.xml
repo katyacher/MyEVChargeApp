@@ -33,8 +33,8 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-        <!--app:itemIconTint="@drawable/nav_item_color_state"
+        app:itemIconTint="@drawable/nav_item_color_state"
+        app:layout_constraintBottom_toBottomOf="parent"/>   <!--
         app:itemTextColor="@drawable/nav_item_color_state"
         app:labelVisibilityMode="labeled"
         app:itemTextAppearanceActive="@style/BottomNavTextActive"

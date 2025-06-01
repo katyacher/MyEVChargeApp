@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -14,7 +16,15 @@ import com.yandex.mapkit.mapview.MapView;
 import data.repositories.StationRepository;
 import models.Station;
 
-public class MapFragment extends Fragment {} /*implements OnMapReadyCallback {
+public class MapFragment extends Fragment {
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_map, container, false);
+    }
+} /*implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
     private MapView mapView;

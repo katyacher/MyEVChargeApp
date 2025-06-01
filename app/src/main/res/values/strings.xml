@@ -23,11 +23,13 @@
     <string name="station_name">BRYNSKAYA4 #15</string>
     <string name="station_address"> Красноярск, ул.Брянская, 4</string>
 
+    <string name="location_title">Местоположение</string>
     <string name="power_title">Мощность:</string>
     <string name="tariff_title">Тариф:</string>
     <string name="tariff">5.5 руб/кВт·ч</string>
-    <string name="location_title">Местоположение</string>
+    <string name="status_title">Статус:</string>
     <string name="location">Парковка торгового центра Планета</string>
+    <string name="connector_ccs2">CCS2</string>
 
     <string name="start_charging">Начать зарядку</string>
     <string name="stop_charging">Остановить зарядку</string>

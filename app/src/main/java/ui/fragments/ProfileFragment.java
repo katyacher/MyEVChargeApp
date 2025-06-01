@@ -40,8 +40,8 @@ public class ProfileFragment extends Fragment {
 
         // История сессий
         RecyclerView rvHistory = view.findViewById(R.id.rv_history);
-        rvHistory.setLayoutManager(new LinearLayoutManager(getContext()));
-        List<Session> history = SessionManager.getInstance().getSessionHistory();
+       // rvHistory.setLayoutManager(new LinearLayoutManager(getContext())); // нужна реализация адаптера
+       // List<Session> history = SessionManager.getInstance().getSessionHistory();  // нужна реализация адаптера
         // TODO: Создать и установить адаптер для истории
 
         // Переключение языка

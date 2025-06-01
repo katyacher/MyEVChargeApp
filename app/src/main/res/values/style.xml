@@ -10,4 +10,9 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@color/text_secondary</item>
     </style>
+    <style name="RoundedButton" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">8dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
 </resources>

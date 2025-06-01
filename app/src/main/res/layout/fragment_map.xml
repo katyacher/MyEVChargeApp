@@ -13,7 +13,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/map_screenshot"/>
 
-    <!-- Карточка станции -->
+    <!-- Карточка станции
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,21 +23,21 @@
         android:elevation="8dp"
         android:padding="16dp">
 
-        <!-- Первая строка -->
+        <!- Первая строка
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical">  -->
 
-            <!-- Иконка станции -->
+            <!-- Иконка станции
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_ev_station"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="8dp"/> -->
 
-            <!-- Название и адрес -->
+            <!-- Название и адрес
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -60,34 +60,34 @@
                     android:text="ул. Брянская, 4"
                     android:textSize="14sp"
                     android:textColor="@color/gray"/>
-            </LinearLayout>
+            </LinearLayout> -->
 
-            <!-- Иконка избранного -->
+            <!-- Иконка избранного
             <ImageView
                 android:id="@+id/iv_favorite"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_favorite_outline"
                 app:tint="@color/primary"/>
-        </LinearLayout>
+        </LinearLayout> -->
 
-        <!-- Вторая строка -->
+        <!-- Вторая строка
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"> -->
 
-            <!-- Иконка времени -->
+            <!-- Иконка времени
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_worktime"
                 app:tint="@color/primary"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="8dp"/> -->
 
-            <!-- Время работы -->
+            <!-- Время работы
             <TextView
                 android:id="@+id/tv_working_hours"
                 android:layout_width="0dp"
@@ -95,9 +95,9 @@
                 android:layout_weight="1"
                 android:text="@string/working_time_24"
                 android:textSize="14sp"
-                android:textColor="@color/gray"/>
+                android:textColor="@color/gray"/> -->
 
-            <!-- Кнопка маршрута -->
+            <!-- Кнопка маршрута
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
             </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+    </LinearLayout>  -->
     <!-- Метка станции -->
     <ImageView
         android:layout_width="48dp"

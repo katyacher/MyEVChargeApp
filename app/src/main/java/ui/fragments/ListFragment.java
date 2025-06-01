@@ -31,7 +31,7 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
         List<Station> stations = StationRepository.getAllStations();
         // Используем общий адаптер
         StationAdapter adapter = new StationAdapter(stations, this);
-        recyclerView.setAdapter(new StationAdapter(stations, this));
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
@@ -40,7 +40,7 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
     public void onStationClick(Station station) {
         // Переход к детальной информации о станции
         Bundle args = new Bundle();
-        args.putInt("station_id", station.getId());// "stationId"
+        args.putInt("stationId", station.getId());
 
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_list_to_details, args);

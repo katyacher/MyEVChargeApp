@@ -34,6 +34,7 @@ android {
 dependencies {
 
     implementation(libs.appcompat)
+    // Material Design
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
@@ -56,6 +57,10 @@ dependencies {
     implementation ("androidx.cardview:cardview:1.0.0'")
     implementation ("androidx.appcompat:appcompat:1.6.1'")
     implementation ("androidx.fragment:fragment:1.6.2")
+    // RecyclerView
     implementation ("androidx.recyclerview:recyclerview:1.3.2")
+    // ViewModel и LiveData
+    implementation ("androidx.lifecycle:lifecycle-viewmodel:2.6.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata:2.6.1")
 
 }

@@ -20,7 +20,8 @@
             android:src="@drawable/ic_ev_station"
             android:textColor="@color/text_bold_black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingTop="12dp"/>
 
 
         <!-- Название станции -->
@@ -37,6 +38,7 @@
             app:layout_constraintTop_toTopOf="@id/iv_icon"
             app:layout_constraintEnd_toStartOf="@id/btn_favorite"
             android:letterSpacing="0.1"
+            android:paddingTop="12dp"
         />
 
         <!-- Адрес станции -->
@@ -51,6 +53,7 @@
             app:layout_constraintLeft_toLeftOf="@id/tv_station_name"
             app:layout_constraintTop_toBottomOf="@id/tv_station_name"
             android:letterSpacing="0.2"/>
+        <!-- Статус
         <TextView
             android:id="@+id/tv_status"
             android:layout_width="wrap_content"
@@ -60,7 +63,7 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@id/tv_station_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_station_address"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_station_address"/> -->
 
         <!-- Кнопка избранного -->
         <ImageButton
@@ -73,7 +76,8 @@
             app:layout_constraintBottom_toBottomOf="@id/iv_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:tint="@color/primary"
-            android:background="@color/white"/>
+            android:background="@color/white"
+            android:paddingTop="12dp"/>
 
         <!-- Иконка времени работы -->
         <ImageView

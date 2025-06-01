@@ -103,7 +103,7 @@ public class FavoritesFragment extends Fragment implements StationAdapter.OnStat
     public void onStationClick(Station station) {
         // Переход к детальной информации о станции
         Bundle args = new Bundle();
-        args.putInt("stationId", station.getId());// "station_id"
+        args.putInt("stationId", station.getId());
 
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_favorites_to_details, args);

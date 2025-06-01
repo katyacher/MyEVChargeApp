@@ -26,8 +26,8 @@
             android:gravity="center_vertical"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
             <!-- Иконка станции -->
             <ImageView
@@ -47,18 +47,21 @@
                     android:id="@+id/tv_station_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="BRYNSKAYA4"
+                    android:text="@string/station_name"
                     android:textSize="18sp"
-                    android:textColor="@color/black"
+                    android:letterSpacing="0.1"
+                    android:textColor="@color/station_name_black"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/tv_station_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ул. Брянская, 4"
-                    android:textSize="14sp"
-                    android:textColor="@color/gray"/>
+                    android:text="@string/station_address"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.2"
+                    android:textColor="@color/station_address_gray"/>
             </LinearLayout>
 
             <ImageButton
