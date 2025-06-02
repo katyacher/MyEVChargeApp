@@ -49,5 +49,18 @@ public class MainActivity extends AppCompatActivity {
             Point point = new Point(station.getLatitude(), station.getLongitude());
             mapView.getMap().getMapObjects().addPlacemark(point);
         }*/
+
+        BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet_behavior));
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                // Обработка изменений состояния
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // Обработка анимации
+            }
+        });
     }
 }
