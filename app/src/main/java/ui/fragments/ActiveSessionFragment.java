@@ -1,7 +1,6 @@
 package ui.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import android.os.Handler;
 
 import models.Session;
 import models.SessionManager;
@@ -24,7 +24,6 @@ public class ActiveSessionFragment extends BottomSheetDialogFragment {
     private Handler handler = new Handler();
     private Runnable updateRunnable;
     private Session session;
-    private BottomSheetBehavior<View> bottomSheetBehavior;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -37,51 +36,6 @@ public class ActiveSessionFragment extends BottomSheetDialogFragment {
             dismiss(); // Закрываем фрагмент, если сессии нет
             return view;
         }
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Инициализация BottomSheetBehavior
-        View bottomSheet = view.findViewById(R.id.bottom_sheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        // Настройка параметров BottomSheet
-        bottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height));
-        bottomSheetBehavior.setHideable(true);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        // Добавление слушателя изменений состояния
-        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        // Полностью раскрыт
-                        break;
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        // Свернут до peekHeight
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        // Полностью скрыт
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        // Пользователь тянет
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        // Анимация завершается
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // Обработка анимации скольжения
-            }
-        });
 
         // Инициализация UI
         TextView tvStationName = view.findViewById(R.id.tv_station_name);
@@ -110,11 +64,14 @@ public class ActiveSessionFragment extends BottomSheetDialogFragment {
 
         // Остановка зарядки
         btnStop.setOnClickListener(v -> {
-            double powerConsumed = calculatePowerConsumed();
+            //  здесь будет запрос к API
+            double powerConsumed = calculatePowerConsumed(); // powerConsumed = 15.7 (кВт*ч)
             session.endSession(powerConsumed);
-            SessionManager.getInstance().stopCurrentSession(powerConsumed);
+            SessionManager.getInstance().stopCurrentSession(powerConsumed);// 15.7 кВт*ч
             dismiss(); // Закрываем фрагмент
         });
+
+        return view;
     }
 
     private void updateSessionUI(TextView tvDuration, TextView tvCurrentPower,
@@ -140,24 +97,5 @@ public class ActiveSessionFragment extends BottomSheetDialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         handler.removeCallbacks(updateRunnable);
-    }
-
-    // Методы для управления BottomSheet из других частей фрагмента
-    public void expandBottomSheet() {
-        if (bottomSheetBehavior != null) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
-    }
-
-    public void collapseBottomSheet() {
-        if (bottomSheetBehavior != null) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-    }
-
-    public void hideBottomSheet() {
-        if (bottomSheetBehavior != null) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
     }
 }

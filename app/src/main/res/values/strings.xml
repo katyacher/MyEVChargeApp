@@ -22,10 +22,11 @@
 
     <string name="location_title">Местоположение</string>
     <string name="power_title">Мощность:</string>
+    <string name="power">24 кВт:</string>
     <string name="tariff_title">Тариф:</string>
     <string name="tariff">5.5 руб/кВт·ч</string>
     <string name="status_title">Статус:</string>
-    <string name="location">Парковка торгового центра Планета</string>
+    <string name="location">на заправке Лукойл</string>
     <string name="connector_ccs2">CCS2</string>
 
     <string name="charging_title">Заряжается</string>
