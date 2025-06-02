@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Станция BRYANSKAYA4"/>
+            tools:text="@string/station_name"/>
 
         <!-- ID сессии -->
         <TextView
@@ -52,7 +52,7 @@
             android:id="@+id/tv_duration_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Продолжительность:"
+            android:text="@string/duration_label"
             android:textColor="@color/gray"
             app:layout_constraintTop_toBottomOf="@id/divider"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -65,7 +65,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_duration_label"
             app:layout_constraintStart_toEndOf="@id/tv_duration_label"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="00:15:30"/>
+            tools:text="@string/duration"/>
 
         <!-- Текущая мощность -->
         <TextView
@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Текущая мощность:"
+            android:text="@string/current_power_label"
             android:textColor="@color/gray"
             app:layout_constraintTop_toBottomOf="@id/tv_duration_label"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -86,7 +86,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_current_power_label"
             app:layout_constraintStart_toEndOf="@id/tv_current_power_label"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="42.5 кВт"/>
+            tools:text="@string/current_power"/>
 
         <!-- Потреблено энергии -->
         <TextView
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Потреблено:"
+            android:text="@string/power_consumed_label"
             android:textColor="@color/gray"
             app:layout_constraintTop_toBottomOf="@id/tv_current_power_label"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -107,7 +107,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_power_consumed_label"
             app:layout_constraintStart_toEndOf="@id/tv_power_consumed_label"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="10.7 кВт·ч"/>
+            tools:text="@string/power_consumed"/>
 
         <!-- Тариф -->
         <TextView
@@ -115,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Тариф:"
+            android:text="@string/tariff_title"
             android:textColor="@color/gray"
             app:layout_constraintTop_toBottomOf="@id/tv_power_consumed_label"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -128,7 +128,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_tariff_label"
             app:layout_constraintStart_toEndOf="@id/tv_tariff_label"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="5.5 руб/кВт·ч"/>
+            tools:text="@string/tariff"/>
 
         <!-- Стоимость -->
         <TextView
@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Стоимость:"
+            android:text="@string/total_cost_label"
             android:textColor="@color/gray"
             app:layout_constraintTop_toBottomOf="@id/tv_tariff_label"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -149,7 +149,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_total_cost_label"
             app:layout_constraintStart_toEndOf="@id/tv_total_cost_label"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="58.85 руб"/>
+            tools:text="@string/total_cost"/>
 
         <!-- Кнопка остановки -->
         <Button
@@ -157,7 +157,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Остановить зарядку"
+            android:text="@string/stop_charging"
             android:backgroundTint="@color/green"
             android:textColor="@color/white"
             app:layout_constraintTop_toBottomOf="@id/tv_total_cost_label"
