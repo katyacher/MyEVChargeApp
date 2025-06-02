@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -16,10 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-/*import java.util.List;
-import models.Station; */
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,17 +47,6 @@ public class MainActivity extends AppCompatActivity {
             mapView.getMap().getMapObjects().addPlacemark(point);
         }*/
 
-        BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet_behavior));
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                // Обработка изменений состояния
-            }
 
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // Обработка анимации
-            }
-        });
     }
 }

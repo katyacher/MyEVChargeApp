@@ -28,14 +28,16 @@
     <string name="location">Парковка торгового центра Планета</string>
     <string name="connector_ccs2">CCS2</string>
 
-
+    <string name="charging_title">Заряжается</string>
+    <string name="session_id_label">Номер сессии:</string>
+    <string name="session_id_example">12345</string>
     <string name="duration_label">Продолжительность:</string>
     <string name="duration">00:15:30</string>
     <string name="current_power_label">Текущая мощность:</string>
     <string name="current_power">42.5 кВт</string>
     <string name="power_consumed_label">Потреблено:</string>
     <string name="power_consumed">10.7 кВт·ч</string>
-    <string name="total_cost_label">Стоимость:</string>
+    <string name="total_cost_label">Итого:</string>
     <string name="total_cost">58.85 руб</string>
 
     <string name="start_charging">Начать зарядку</string>
