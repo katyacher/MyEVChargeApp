@@ -46,7 +46,7 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
         TextView tvStatus = view.findViewById(R.id.tv_status);
         TextView tvPower = view.findViewById(R.id.tv_power);
         TextView tvTariff = view.findViewById(R.id.tv_tariff);
-        TextView tvDescription = view.findViewById(R.id.tv_description);
+        TextView tvLocation = view.findViewById(R.id.tv_location);
         Button btnStartCharging = view.findViewById(R.id.btn_start_charging);
 
         tvName.setText(station.getName());
@@ -54,7 +54,7 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
         tvStatus.setText(station.getStatus());
         tvPower.setText(String.format("%.1f кВт", station.getPower()));
         tvTariff.setText(String.format("%.1f руб/кВт·ч", station.getTariff()));
-        tvDescription.setText(station.getLocationDescription());
+        tvLocation.setText(station.getLocationDescription());
 
         // Настройка цвета статуса в зависимости от состояния
         switch (station.getStatus().toLowerCase()) {
