@@ -1,4 +1,6 @@
 package models;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +23,16 @@ public class SessionManager {
         currentSession = new Session(sessionId, station);
     }
     public Session startNewSession(Station station) {
+        if (station == null) {
+            Log.e("SessionManager", "Cannot start session - station is null");
+            return null;
+        }
         String sessionId = "session_" + System.currentTimeMillis();
         currentSession = new Session(sessionId, station);
+        //this.currentSession = session;
+        Log.d("SessionManager", "New session started: " + sessionId); // currentSession.getId()
         return currentSession;
+
     }
 
     public void stopCurrentSession(double powerConsumed) {

@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -25,7 +28,7 @@ import data.repositories.StationRepository;
 import models.SessionManager;
 import models.Station;
 
-public class StationDetailsFragment extends BottomSheetDialogFragment {
+public class StationDetailsFragment extends Fragment {
 
     private int stationId;
     private Station station;
@@ -34,8 +37,22 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
         void onStartCharging(int stationId);
     }
 
+   // @Override
+    public void show(@NonNull FragmentManager manager, @Nullable String tag) {
+        try {
+            // Добавляем транзакцию в back stack
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, tag);
+            ft.addToBackStack(null);
+            ft.commit();
+        } catch (IllegalStateException e) {
+            Log.e("StationDetails", "Can't show dialog", e);
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d("StationDetails", "Fragment created with stationId: " + stationId);
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             stationId = getArguments().getInt("stationId");
@@ -45,7 +62,7 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
            //     dismiss(); // Закрываем сразу, если станция не найдена
            // }
         } else {
-            dismiss(); // Закрываем, если нет аргументов
+            //dismiss(); // Закрываем, если нет аргументов
         }
     }
     @Override
@@ -65,7 +82,7 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.fragment_station_details, container, false);
         // Проверка на null станции
         if (station == null) {
-            dismiss(); // Закрываем bottom sheet
+            //dismiss(); // Закрываем bottom sheet
             return view; // Возвращаем пустое view
         }
 
@@ -106,12 +123,20 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
                 || station.getStatus().equalsIgnoreCase("свободно");
         btnStartCharging.setEnabled(isAvailable);
         btnStartCharging.setAlpha(isAvailable ? 1f : 0.5f); //визуальный эффект, если станция не доступна для зарядки
+
         // Кнопка "Начать зарядку"
         btnStartCharging.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onStartCharging(stationId);
+            try {
+                if (listener != null) {
+                    listener.onStartCharging(stationId);
+                } else {
+                    Log.e("StationDetails", "Listener is null");
+                }
+                //dismiss();
+            } catch (Exception e) {
+                Log.e("StationDetails", "Start charging error", e);
+                Toast.makeText(requireContext(), "Ошибка запуска зарядки", Toast.LENGTH_SHORT).show();
             }
-            dismiss();
         });
         //Анимация при нажатии кнопки
         btnStartCharging.setOnTouchListener((v, event) -> {

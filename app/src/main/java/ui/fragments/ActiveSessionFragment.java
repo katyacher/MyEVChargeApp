@@ -2,6 +2,7 @@ package ui.fragments;
 
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
@@ -22,36 +24,58 @@ import models.Session;
 import models.SessionManager;
 import models.Station;
 
-public class ActiveSessionFragment extends BottomSheetDialogFragment {
+public class ActiveSessionFragment extends Fragment { //extends BottomSheetDialogFragment
 
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable updateRunnable;
     private Session session;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d("ActiveSession", "Creating fragment with args: " + getArguments());
         super.onCreate(savedInstanceState);
-/* (getArguments() != null) {
-            int stationId = getArguments().getInt("stationId");
-            // Здесь можно получить данные станции, если нужно
-        }*/
+        // Для демо всегда используем станцию с ID 1
+        Station station = StationRepository.getStationById(1);
+        if (station == null) {
+            Log.e("ActiveSession", "Demo station not found");
+           // dismiss();
+            return;
+        }
+
+        SessionManager sessionManager = SessionManager.getInstance();
+        session = sessionManager.startNewSession(station);
+        Log.d("ActiveSession", "Session started for station: " + station.getId());
+        /* Проверяем аргументы
+        if (getArguments() == null || !getArguments().containsKey("stationId")) {
+            Log.e("ActiveSession", "No stationId in arguments");
+            dismiss();
+            return;
+        }
+        int stationId = getArguments().getInt("stationId");
+        Station station = StationRepository.getStationById(stationId);
+
+        if (station == null) {
+            Log.e("ActiveSession", "Station not found for id: " + stationId);
+            dismiss();
+            return;
+        }
 
         // Инициализация сессии (для демо-режима)
         SessionManager sessionManager = SessionManager.getInstance();
         session = sessionManager.getCurrentSession();
         if (session == null && getArguments() != null) {
-            int stationId = getArguments().getInt("stationId");
-            Station station = StationRepository.getStationById(stationId);
-            if (station != null) {
+            //int stationId = getArguments().getInt("stationId");
+           // Station station = StationRepository.getStationById(stationId);
+            //if (station != null) {
                 session = sessionManager.startNewSession(station);
-            }
+           // }
         }
 
         // Если все равно нет сессии (например, нет аргументов), создаем демо-сессию
         if (session == null) {
             Station demoStation = StationRepository.getStationById(1); // Первая станция
             session = sessionManager.startNewSession(demoStation);
-        }
+        } */
     }
     @Nullable
     @Override
@@ -109,7 +133,7 @@ public class ActiveSessionFragment extends BottomSheetDialogFragment {
             double powerConsumed = calculatePowerConsumed(); // powerConsumed = 15.7 (кВт*ч)
             session.endSession(powerConsumed);
             SessionManager.getInstance().stopCurrentSession(powerConsumed);// 15.7 кВт*ч
-            dismiss(); // Закрываем фрагмент
+            //dismiss(); // Закрываем bottom sheet
         });
 
         return view;
