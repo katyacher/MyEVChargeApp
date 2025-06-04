@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <!-- Menu -->
+    <string name="map">Map</string>
+    <string name="list">Stations List</string>
+    <string name="favorites">Favorites</string>
+    <string name="profile">My Profile</string>
+
+    <string name="station_name">BRYNSKAYA4 #15</string>
+    <string name="station_address">Krasnoyarsk, Bryanskaya st. 4</string>
+    <string name="working_time_24">24/7</string>
+    <string name="working_time_6_to_18">6:00 AM–6:00 PM</string>
+    <string name="working_time_9_to_21">9:00 AM–9:00 PM</string>
+    <string name="favorites_empty">Add stations to favorites</string>
+    <string name="nav">Route</string>
+
+    <string name="station_status_free">Available</string>
+    <string name="station_status_busy">Busy</string>
+    <string name="station_status_offline">Offline</string>
+
+    <string name="location_title">Location</string>
+    <string name="power_title">Power:</string>
+    <string name="power">24 kW:</string>
+    <string name="tariff_title">Tariff:</string>
+    <string name="tariff">5.5 RUB/kWh</string>
+    <string name="status_title">Status:</string>
+    <string name="location">at Lukoil gas station</string>
+    <string name="connector_ccs2">CCS2</string>
+
+    <string name="charging_title">Charging</string>
+    <string name="session_id_label">Session ID:</string>
+    <string name="session_id_example">12345</string>
+    <string name="duration_label">Duration:</string>
+    <string name="duration">00:15:30</string>
+    <string name="current_power_label">Current power:</string>
+    <string name="current_power">42.5 kW</string>
+    <string name="power_consumed_label">Consumed:</string>
+    <string name="power_consumed">10.7 kWh</string>
+    <string name="total_cost_label">Total:</string>
+    <string name="total_cost">58.85 RUB</string>
+
+    <string name="start_charging">Start Charging</string>
+    <string name="stop_charging">Stop Charging</string>
+
+    <string name="profile_title">My Profile</string>
+    <string name="phone_label">Phone</string>
+    <string name="email_label">Email</string>
+    <string name="settings_title">Settings</string>
+    <string name="language_setting">Language (English/Russian)</string>
+    <string name="session_history">Charging History</string>
+    <string name="phone">+7 999 999–99–99</string>
+    <string name="email">user@example.com</string>
+    <string name="history">Charging History</string>
+</resources>

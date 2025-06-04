@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.view.View;
@@ -27,7 +28,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNav = findViewById(R.id.bottom_navigation);
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        // Получаем NavHostFragment и NavController
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+
         // Настройка нижнего меню
         NavigationUI.setupWithNavController(bottomNav, navController);
 

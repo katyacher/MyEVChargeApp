@@ -6,7 +6,7 @@ import java.util.List;
 import models.Station;
 
 public class StationRepository {
-    private static List<Station> stations = new ArrayList<>();
+    private static final List<Station> stations = new ArrayList<>();
 
 
     static {
@@ -37,7 +37,7 @@ public class StationRepository {
         stations.add(new Station(
                 3,
                 "PLANETA77",
-                "free",
+                "Свободно",
                 "Красноярск, пр. 9 Мая, 77",
                 "Круглосуточно",
                 56.012345, 92.987654,
@@ -49,7 +49,7 @@ public class StationRepository {
         stations.add(new Station(
                 4,
                 "PROFF64",
-                "offline",
+                "Не в сети",
                 "Красноярск, ул.Профсоюзов, 64",
                 "8:00-22:00",
                 56.012345, 92.987654,

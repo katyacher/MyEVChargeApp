@@ -1,6 +1,7 @@
 package ui.fragments;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import models.SessionManager;
 
 public class ActiveSessionFragment extends BottomSheetDialogFragment {
 
-    private Handler handler = new Handler();
+    private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable updateRunnable;
     private Session session;
 

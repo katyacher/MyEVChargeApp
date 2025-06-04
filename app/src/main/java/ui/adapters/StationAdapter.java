@@ -1,6 +1,7 @@
 package ui.adapters;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,11 +40,21 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Station station = stations.get(position);
-        // Пример привязки данных
+        if (station == null) {
+            Log.w("StationAdapter", "Station at position " + position + " is null");
+            return;
+        }
+        //  привязка данных
         holder.tvStationName.setText(station.getName());
         holder.tvStationAddress.setText(station.getAddress());
-        holder.tvStatus.setText(station.getStatus());
         holder.tvWorkingHours.setText(station.getWorkingHours());
+        // Проверка статуса
+        /*String status = station.getStatus();
+        if (status == null) {
+            status = "Неизвестно";
+            Log.w("StationAdapter", "Null status for station: " + station.getName());
+        }
+        holder.tvStatus.setText(status);*/
 
         // Установка иконки избранного
         int favoriteIcon = station.isFavorite() ?
@@ -52,27 +63,30 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
 
 
         // Обработчики кликов
+
         holder.itemView.setOnClickListener(v -> {
-            listener.onStationClick(station);
+            if (listener != null) listener.onStationClick(station);
         });
+        // Обработчики кликов с проверками
+        if (holder.btnFavorite != null) {
+            holder.btnFavorite.setOnClickListener(v -> {
+                if (listener != null) listener.onFavoriteClick(station);
+            });
+        }
 
-        holder.btnFavorite.setOnClickListener(v -> {
-            listener.onFavoriteClick(station);
-        });
-
-        holder.tvNav.setOnClickListener(v -> {
-            listener.onRouteClick(station);
-        });
+        if (holder.tvNav != null) {  // если используется
+            holder.tvNav.setOnClickListener(v -> {
+                if (listener != null) listener.onRouteClick(station);
+            });
+        }
 
         // установка случайного статуса
-        String[] statuses = {"Свободно", "Занято", "Не в сети"};
-        String randomStatus = statuses[new Random().nextInt(3)];
-        holder.tvStatus.setText(randomStatus);
+        //String[] statuses = {"Свободно", "Занято", "Не в сети"};
+        //String randomStatus = statuses[new Random().nextInt(3)];
+        //holder.tvStatus.setText(randomStatus);
 
-        // Привязка данных
-       /* holder.tvName.setText(station.getName());
-        holder.tvStatus.setText(station.getStatus());
 
+       /*
         holder.btnRoute.setOnClickListener(v -> {
             // Обработка клика на кнопке маршрута
             // station.getLatitude()/getLongitude()
@@ -101,18 +115,19 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View tvNav;
-        TextView tvStationName, tvStationAddress, tvWorkingHours, tvStatus;
+        TextView tvStationName, tvStationAddress, tvWorkingHours; // tvStatus
         ImageButton btnFavorite;
         //Button btnRoute;
 
         public ViewHolder(View view) {
             super(view);
-            //tvStatus = view.findViewById(R.id.tv_station_status);
-           // btnRoute = view.findViewById(R.id.btn_route);
-            tvStationName = itemView.findViewById(R.id.tv_station_name);
-            tvStationAddress = itemView.findViewById(R.id.tv_station_address);
-            btnFavorite = itemView.findViewById(R.id.btn_favorite);
-            tvWorkingHours =  itemView.findViewById(R.id.tv_working_hours);
+            // Находим все View
+            tvStationName = view.findViewById(R.id.tv_station_name);
+            tvStationAddress = view.findViewById(R.id.tv_station_address);
+            tvWorkingHours = view.findViewById(R.id.tv_working_hours);
+            btnFavorite = view.findViewById(R.id.btn_favorite);
+            //tvStatus = view.findViewById(R.id.tv_status); // нет в item_station.xml
+            // btnRoute = view.findViewById(R.id.btn_route); // для реализации карты
         }
     }
 

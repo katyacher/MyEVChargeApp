@@ -9,7 +9,7 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 retrofit = "2.9.0"
 room = "2.7.1"
-navigation = "2.9.0"
+navigation = "2.7.7"
 yandexMaps = "4.4.0-full"
 constraintlayoutVersion = "2.2.1"
 materialVersion = "1.12.0"
@@ -34,8 +34,8 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 # Navigation
-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
-navigation-ui = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation" }
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigation" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayoutVersion" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
 

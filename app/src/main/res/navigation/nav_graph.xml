@@ -26,7 +26,12 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_details_to_session"
-            app:destination="@id/activeSessionFragment" />
+            app:destination="@id/activeSessionFragment"/>
+           <!-- Анимация для action
+            app:enterAnim="@anim/slide_in_up"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out_down" -->
     </dialog>
 
     <!-- Экран 3: Активная сессия (Bottom Sheet) -->
@@ -70,9 +75,9 @@
         app:layout="@layout/fragment_profile"/>
 
 
-    <!--<action
+    <action
         android:id="@+id/action_map_to_details"
         app:destination="@id/stationDetailsFragment"
         app:enterAnim="@anim/slide_in_right"
-        app:exitAnim="@anim/slide_out_left" /> -->
+        app:exitAnim="@anim/slide_out_left" />
 </navigation>

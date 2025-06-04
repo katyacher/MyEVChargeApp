@@ -5,13 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.LocaleList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,34 +36,35 @@ public class ProfileFragment extends Fragment {
     private static final String PREF_LANGUAGE = "app_language";
     private static final String DEFAULT_LANGUAGE = "ru";
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Заполнение данных пользователя
+        initViews(view);
+        return view;
+    }
+
+    private void initViews(View view) {
         TextView tvEmail = view.findViewById(R.id.tv_email);
         TextView tvPhone = view.findViewById(R.id.tv_phone);
 
-        // История сессий
         RecyclerView rvHistory = view.findViewById(R.id.rv_history);
-       // rvHistory.setLayoutManager(new LinearLayoutManager(getContext())); // нужна реализация адаптера
-       // List<Session> history = SessionManager.getInstance().getSessionHistory();  // нужна реализация адаптера
-        // TODO: Создать и установить адаптер для истории
+        rvHistory.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Переключение языка
-        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch switchLanguage = view.findViewById(R.id.switch_language);
 
-        // Восстановление состояния переключателя
+        SwitchCompat switchLanguage = view.findViewById(R.id.switch_language);
+
         String currentLang = getSavedLanguage();
         switchLanguage.setChecked("en".equals(currentLang));
 
         switchLanguage.setOnCheckedChangeListener((buttonView, isChecked) -> {
             String newLang = isChecked ? "en" : "ru";
             saveLanguagePreference(newLang);
-            setLocale(newLang);
+            applyLocale(newLang);
         });
-
-        return view;
     }
 
     private String getSavedLanguage() {
@@ -73,20 +80,29 @@ public class ProfileFragment extends Fragment {
         editor.apply();
     }
 
-    private void setLocale(String lang) {
+    private void applyLocale(String lang) {
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
 
         Configuration config = new Configuration();
         config.setLocale(locale);
 
-        Context context = requireContext();
-        context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
+        Context context = requireContext().createConfigurationContext(config);
+        context.getResources();
 
-        // Перезапуск активности
+        restartApp();
+    }
+
+    private void restartApp() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        getActivity().finishAffinity();
+
+        if (getActivity() != null) {
+            getActivity().finishAffinity();
+        }
+
+        // Принудительный системный выход для полного обновления
+        Runtime.getRuntime().exit(0);
     }
 }

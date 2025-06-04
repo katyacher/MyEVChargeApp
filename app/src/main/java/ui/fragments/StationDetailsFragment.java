@@ -2,6 +2,7 @@ package ui.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
@@ -31,6 +33,12 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
         if (getArguments() != null) {
             stationId = getArguments().getInt("stationId");
             station = StationRepository.getStationById(stationId);
+
+            if (station == null) {
+                dismiss(); // Закрываем сразу, если станция не найдена
+            }
+        } else {
+            dismiss(); // Закрываем, если нет аргументов
         }
     }
 
@@ -39,7 +47,11 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_station_details, container, false);
-
+        // Проверка на null станции
+        if (station == null) {
+            dismiss(); // Закрываем bottom sheet
+            return view; // Возвращаем пустое view
+        }
         // Заполнение данных станции
         TextView tvName = view.findViewById(R.id.tv_station_name);
         TextView tvAddress = view.findViewById(R.id.tv_station_address);
@@ -71,13 +83,29 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
                 tvStatus.setBackgroundResource(R.drawable.status_background_offline);
                 break;
         }
+        // Проверка доступности станции для зарядки
+        boolean isAvailable = station.getStatus().equalsIgnoreCase("free")
+                || station.getStatus().equalsIgnoreCase("свободно");
+        btnStartCharging.setEnabled(isAvailable);
 
+        btnStartCharging.setAlpha(isAvailable ? 1f : 0.5f); //визуальный эффект, если станция не доступна для зарядки
         // Кнопка "Начать зарядку"
         btnStartCharging.setOnClickListener(v -> {
-            SessionManager.getInstance().startSession(station);
-            Bundle args = new Bundle();
-            args.putInt("stationId", stationId);
-            Navigation.findNavController(v).navigate(R.id.action_details_to_session, args);
+            Log.d("Navigation", "Attempting to navigate to active session");
+            try {
+                SessionManager.getInstance().startSession(station);
+                Bundle args = new Bundle();
+                args.putInt("stationId", stationId);
+
+                // Используем NavController родительского фрагмента
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.action_details_to_session, args);
+
+                dismiss(); // Закрываем bottom sheet после перехода
+            } catch (Exception e) {
+                Log.e("Navigation", "Error during navigation", e);
+            }
+
         });
         //Анимация при нажатии кнопки
         btnStartCharging.setOnTouchListener((v, event) -> {

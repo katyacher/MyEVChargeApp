@@ -29,6 +29,20 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    // Настройка для Java-компилятора
+    tasks.withType<JavaCompile> {
+        options.compilerArgs.addAll(listOf(
+            "-Xlint:deprecation",  // Показывает устаревшие API
+            "-Xlint:unchecked",    // Показывает предупреждения о "raw types"
+          //  "-Werror"              // Превращает предупреждения в ошибки (опционально)
+        ))
+    }
+
+    // Добавьте это для Java-кода:
+    tasks.withType<JavaCompile> {
+        options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:unchecked"))
+    }
 }
 
 dependencies {
@@ -38,7 +52,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.google.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
@@ -55,8 +68,7 @@ dependencies {
     // Навигация между экранами
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    implementation ("androidx.cardview:cardview:1.0.0'")
-    implementation ("androidx.appcompat:appcompat:1.6.1'")
+    implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("androidx.fragment:fragment:1.6.2")
     // RecyclerView
     implementation ("androidx.recyclerview:recyclerview:1.3.2")

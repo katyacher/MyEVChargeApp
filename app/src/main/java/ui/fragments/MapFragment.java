@@ -24,6 +24,12 @@ public class MapFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
+    private void showStationDetails(int stationId) {
+        Bundle args = new Bundle();
+        args.putInt("stationId", stationId);
+        Navigation.findNavController(requireView()).navigate(R.id.action_map_to_details, args);
+    }
+
 } /*implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
