@@ -20,6 +20,11 @@ public class SessionManager {
         String sessionId = "session_" + System.currentTimeMillis();
         currentSession = new Session(sessionId, station);
     }
+    public Session startNewSession(Station station) {
+        String sessionId = "session_" + System.currentTimeMillis();
+        currentSession = new Session(sessionId, station);
+        return currentSession;
+    }
 
     public void stopCurrentSession(double powerConsumed) {
         if (currentSession != null) {

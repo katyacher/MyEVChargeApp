@@ -1,6 +1,7 @@
 package ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.myapplication.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -26,6 +29,10 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
 
     private int stationId;
     private Station station;
+    private OnStartChargingListener listener;
+    public interface OnStartChargingListener {
+        void onStartCharging(int stationId);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,11 +41,20 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
             stationId = getArguments().getInt("stationId");
             station = StationRepository.getStationById(stationId);
 
-            if (station == null) {
-                dismiss(); // Закрываем сразу, если станция не найдена
-            }
+           // if (station == null) {
+           //     dismiss(); // Закрываем сразу, если станция не найдена
+           // }
         } else {
             dismiss(); // Закрываем, если нет аргументов
+        }
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnStartChargingListener) {
+            listener = (OnStartChargingListener) context;
+        } else {
+            throw new RuntimeException(context + " must implement OnStartChargingListener");
         }
     }
 
@@ -52,6 +68,7 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
             dismiss(); // Закрываем bottom sheet
             return view; // Возвращаем пустое view
         }
+
         // Заполнение данных станции
         TextView tvName = view.findViewById(R.id.tv_station_name);
         TextView tvAddress = view.findViewById(R.id.tv_station_address);
@@ -59,6 +76,7 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
         TextView tvPower = view.findViewById(R.id.tv_power);
         TextView tvTariff = view.findViewById(R.id.tv_tariff);
         TextView tvLocation = view.findViewById(R.id.tv_location);
+        // Инициализация UI элементов
         Button btnStartCharging = view.findViewById(R.id.btn_start_charging);
 
         tvName.setText(station.getName());
@@ -87,25 +105,13 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
         boolean isAvailable = station.getStatus().equalsIgnoreCase("free")
                 || station.getStatus().equalsIgnoreCase("свободно");
         btnStartCharging.setEnabled(isAvailable);
-
         btnStartCharging.setAlpha(isAvailable ? 1f : 0.5f); //визуальный эффект, если станция не доступна для зарядки
         // Кнопка "Начать зарядку"
         btnStartCharging.setOnClickListener(v -> {
-            Log.d("Navigation", "Attempting to navigate to active session");
-            try {
-                SessionManager.getInstance().startSession(station);
-                Bundle args = new Bundle();
-                args.putInt("stationId", stationId);
-
-                // Используем NavController родительского фрагмента
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-                navController.navigate(R.id.action_details_to_session, args);
-
-                dismiss(); // Закрываем bottom sheet после перехода
-            } catch (Exception e) {
-                Log.e("Navigation", "Error during navigation", e);
+            if (listener != null) {
+                listener.onStartCharging(stationId);
             }
-
+            dismiss();
         });
         //Анимация при нажатии кнопки
         btnStartCharging.setOnTouchListener((v, event) -> {
@@ -119,4 +125,8 @@ public class StationDetailsFragment extends BottomSheetDialogFragment {
 
         return view;
     }
+
+
+
+
 }
