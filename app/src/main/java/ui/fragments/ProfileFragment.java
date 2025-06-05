@@ -54,9 +54,7 @@ public class ProfileFragment extends Fragment {
         RecyclerView rvHistory = view.findViewById(R.id.rv_history);
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
         SwitchCompat switchLanguage = view.findViewById(R.id.switch_language);
-
         String currentLang = getSavedLanguage();
         switchLanguage.setChecked("en".equals(currentLang));
 
@@ -81,16 +79,19 @@ public class ProfileFragment extends Fragment {
     }
 
     private void applyLocale(String lang) {
-        Locale locale = new Locale(lang);
+        /*Locale locale = new Locale(lang);
         Locale.setDefault(locale);
 
         Configuration config = new Configuration();
         config.setLocale(locale);
 
         Context context = requireContext().createConfigurationContext(config);
-        context.getResources();
+        context.getResources();*/
 
-        restartApp();
+        saveLanguagePreference(lang);
+        if (getActivity() != null) {
+            MainActivity.restartActivity(getActivity());
+        }
     }
 
     private void restartApp() {

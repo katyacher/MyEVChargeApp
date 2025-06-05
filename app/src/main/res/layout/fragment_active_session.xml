@@ -9,7 +9,7 @@
     <FrameLayout
         android:id="@+id/map_container"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:background="@color/primary">
 
         <!-- Здесь будет ваша карта (MapView или MapFragment) -->
@@ -30,7 +30,7 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_peekHeight="200dp"
         app:behavior_hideable="true"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="300dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
 
