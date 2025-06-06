@@ -1,13 +1,13 @@
 <h2> Инструкция по сборке apk-файла </h2>
 <h4>Через командную строку:</h4>
-Откройте терминал в папке проекта (или перейдите в нее через cd)  
+1. Откройте терминал в папке проекта (или перейдите в нее через cd)  
 
-Выполните команду для сборки:  
+2. Выполните команду для сборки:  
 bash  
 (Linux/Ubuntu)./gradlew assembleRelease  
 (Windows) gradlew.bat assembleRelease  
 
-Если нужно подписать APK, сначала создайте файл keystore.properties в папке проекта:  
+3. Если нужно подписать APK, сначала создайте файл keystore.properties в папке проекта:  
     storePassword=ваш_пароль  
     keyPassword=ваш_пароль  
     keyAlias=ваш_алиас  
@@ -40,8 +40,8 @@ android {
     }  
 }
 ```
-Снова выполните:
-bash
-(Linux/Ubuntu)./gradlew assembleRelease  
-(Windows) gradlew.bat assembleRelease  
-Готовый APK будет в: app/build/outputs/apk/release/app-release.apk
+Снова выполните:  
+bash  
+(Linux/Ubuntu)./gradlew assembleRelease   
+(Windows) gradlew.bat assembleRelease   
+4. Готовый APK будет в: app/build/outputs/apk/release/app-release.apk 
