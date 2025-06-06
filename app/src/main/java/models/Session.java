@@ -50,7 +50,4 @@ public class Session {
     public double getPowerConsumed() { return powerConsumed; }
     public void setCurrentPower(double power) { currentPower = power; }
 
-
-
-
 }

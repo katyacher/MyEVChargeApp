@@ -19,15 +19,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.myapplication.R;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
 import data.repositories.StationRepository;
-import models.SessionManager;
 import models.Station;
-
 public class StationDetailsFragment extends Fragment {
 
     private int stationId;
@@ -57,10 +52,6 @@ public class StationDetailsFragment extends Fragment {
         if (getArguments() != null) {
             stationId = getArguments().getInt("stationId");
             station = StationRepository.getStationById(stationId);
-
-           // if (station == null) {
-           //     dismiss(); // Закрываем сразу, если станция не найдена
-           // }
         } else {
             //dismiss(); // Закрываем, если нет аргументов
         }
@@ -80,6 +71,12 @@ public class StationDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_station_details, container, false);
+        // Обработчик клика по карте
+        view.findViewById(R.id.map_container).setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+            navController.navigate(R.id.mapFragment);
+        });
+
         // Проверка на null станции
         if (station == null) {
             //dismiss(); // Закрываем bottom sheet

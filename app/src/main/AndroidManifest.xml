@@ -33,5 +33,3 @@
 
 </manifest>
 
-<!-- android:enableOnBackInvokedCallback="true" // для обратной навигации -->
-<!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->

@@ -55,24 +55,3 @@ public class Station {
 }
 
 
-/*
-public enum Status {
-        FREE, BUSY, OFFLINE
-    }
-
-    private Status status;
-
-    // Геттер/сеттер для enum
-    public Status getStatus() {
-        return status;
-    }
-
-    public String getStatusString() {
-        switch(status) {
-            case FREE: return "Свободно";
-            case BUSY: return "Занято";
-            case OFFLINE: return "Не в сети";
-            default: return "";
-        }
-    }
- */

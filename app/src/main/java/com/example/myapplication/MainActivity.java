@@ -5,28 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
+
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import android.os.LocaleList;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -68,28 +59,7 @@ public class MainActivity extends AppCompatActivity implements StationDetailsFra
                 bottomNav.setVisibility(View.VISIBLE);
             }
         });
-
-        /*List<Station> stations = getStationsFromAPI(); // Заглушка
-        for (Station station : stations) {
-            Point point = new Point(station.getLatitude(), station.getLongitude());
-            mapView.getMap().getMapObjects().addPlacemark(point);
-        }*/
     }
-    // Реализация интерфейса OnStartChargingListener
-    /* @Override
-    public void onStartCharging(int stationId) {
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment);
-
-        if (navHostFragment != null) {
-            NavController navController = navHostFragment.getNavController();
-            Bundle args = new Bundle();
-            args.putInt("stationId", stationId);
-            navController.navigate(R.id.action_details_to_session, args);
-        }
-    } */
-
-    // упращенная реализация через NavController
 
     @Override
     public void onStartCharging(int stationId) {
@@ -99,12 +69,7 @@ public class MainActivity extends AppCompatActivity implements StationDetailsFra
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
             Bundle args = new Bundle();
             args.putInt("stationId", stationId);
-            /*
-             // Закрываем текущий диалог перед открытием нового
-             Fragment currentDialog = getSupportFragmentManager().findFragmentByTag("station_details");
-             if (currentDialog instanceof DialogFragment) {
-                 ((DialogFragment) currentDialog).dismiss();
-             } */
+
             navController.navigate(R.id.action_details_to_session, args);
         } catch (Exception e) {
             Log.e("MainActivity", "Navigation error", e);

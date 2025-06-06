@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import data.repositories.StationRepository;
@@ -73,11 +71,6 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
     @Override
     public void onRouteClick(Station station) {
         // Построение маршрута через Intent
-        //Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
-        //        station.getLatitude() + "," + station.getLongitude());
-        //Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        //mapIntent.setPackage("com.google.android.apps.maps");
-        //startActivity(mapIntent);
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

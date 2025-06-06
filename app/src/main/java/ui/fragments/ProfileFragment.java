@@ -1,18 +1,15 @@
 package ui.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
+
 import android.os.Bundle;
-import android.os.LocaleList;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
+
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,11 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 
-import java.util.List;
-import java.util.Locale;
 
-import models.Session;
-import models.SessionManager;
 
 public class ProfileFragment extends Fragment {
 
@@ -79,15 +72,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void applyLocale(String lang) {
-        /*Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Configuration config = new Configuration();
-        config.setLocale(locale);
-
-        Context context = requireContext().createConfigurationContext(config);
-        context.getResources();*/
-
         saveLanguagePreference(lang);
         if (getActivity() != null) {
             MainActivity.restartActivity(getActivity());

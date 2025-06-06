@@ -43,6 +43,9 @@
         <argument
             android:name="stationId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_map_to_details"
+            app:destination="@id/stationDetailsFragment" />
     </fragment>
 
     <!-- Экран 4: Список станций -->
