@@ -8,14 +8,14 @@ bash
 (Windows) gradlew.bat assembleRelease  
 
 Если нужно подписать APK, сначала создайте файл keystore.properties в папке проекта:  
-storePassword=ваш_пароль  
-keyPassword=ваш_пароль  
-keyAlias=ваш_алиас  
-storeFile=путь/к/файлу.jks  
+    storePassword=ваш_пароль  
+    keyPassword=ваш_пароль  
+    keyAlias=ваш_алиас  
+    storeFile=путь/к/файлу.jks  
 
 Добавьте в app/build.gradle перед android {:  
 
-gradle  
+'''gradle  
 def keystoreProperties = new Properties()  
 def keystorePropertiesFile = rootProject.file('keystore.properties')  
 if (keystorePropertiesFile.exists()) {  
@@ -39,7 +39,9 @@ android {
         }  
     }  
 }
+'''
 Снова выполните:
 bash
-./gradlew assembleRelease
+(Linux/Ubuntu)./gradlew assembleRelease  
+(Windows) gradlew.bat assembleRelease  
 Готовый APK будет в: app/build/outputs/apk/release/app-release.apk
