@@ -5,7 +5,7 @@
 2. Выполните команду для сборки:  
 bash  
 (Linux/Ubuntu)./gradlew assembleRelease  
-(Windows) gradlew.bat assembleRelease  
+(Windows) .\gradlew.bat assembleRelease  
 
 3. Если нужно подписать APK, сначала создайте файл keystore.properties в папке проекта:  
     storePassword=ваш_пароль  
@@ -43,5 +43,5 @@ android {
 Снова выполните:  
 bash  
 (Linux/Ubuntu)./gradlew assembleRelease   
-(Windows) gradlew.bat assembleRelease   
+(Windows) .\gradlew.bat assembleRelease   
 4. Готовый APK будет в: app/build/outputs/apk/release/app-release.apk 
