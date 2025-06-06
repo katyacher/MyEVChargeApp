@@ -15,7 +15,7 @@ bash
 
 Добавьте в app/build.gradle перед android {:  
 
-'''gradle  
+```gradle  
 def keystoreProperties = new Properties()  
 def keystorePropertiesFile = rootProject.file('keystore.properties')  
 if (keystorePropertiesFile.exists()) {  
@@ -39,7 +39,7 @@ android {
         }  
     }  
 }
-'''
+```
 Снова выполните:
 bash
 (Linux/Ubuntu)./gradlew assembleRelease  
