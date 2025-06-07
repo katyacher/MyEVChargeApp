@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -17,7 +16,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.util.Log;
 import android.view.View;
-
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

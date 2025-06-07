@@ -1,5 +1,9 @@
 package models;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+@Entity(tableName = "stations")
 public class Station {
+    @PrimaryKey
     private int id;
     private String name;
     private String address;
@@ -7,7 +11,7 @@ public class Station {
     private double latitude;
     private double longitude;
     private String status;
-    private boolean isFavorite; // Добавлено поле для избранного
+    //private boolean isFavorite; // Добавлено поле для избранного // определяется через таблицу favorites
     private String locationDescription; // Для подробного описания
     private double power; // Мощность станции (кВт)
     private double tariff; // Тариф (руб/кВт·ч)
@@ -26,7 +30,7 @@ public class Station {
         this.locationDescription = locationDescription;
         this.power = power;
         this.tariff = tariff;
-        this.isFavorite = false; // По умолчанию не в избранном
+       // this.isFavorite = false; // По умолчанию не в избранном
     }
 
     // Геттеры для всех полей
@@ -35,8 +39,8 @@ public class Station {
     public String getStatus() { return status; }
     public String getAddress() { return address; }
     public String getWorkingHours() { return workingHours; }
-    public boolean isFavorite() { return isFavorite; }
-    public void setFavorite(boolean favorite) { isFavorite = favorite; }
+    //public boolean isFavorite() { return isFavorite; }
+    //public void setFavorite(boolean favorite) { isFavorite = favorite; }
     public String getLocationDescription() { return locationDescription; }
     public double getPower() { return power; }
     public double getTariff() { return tariff; }

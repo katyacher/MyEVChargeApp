@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.application);
 }
 
 android {
@@ -14,6 +14,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true",
+                    "room.expandProjection" to "true"
+                )
+            }
+        }
+
     }
 
     buildTypes {
@@ -65,6 +75,7 @@ dependencies {
     // Room (для локальной БД)
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
+
     // Навигация между экранами
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
@@ -73,7 +84,7 @@ dependencies {
     // RecyclerView
     implementation ("androidx.recyclerview:recyclerview:1.3.2")
     // ViewModel и LiveData
-    implementation ("androidx.lifecycle:lifecycle-viewmodel:2.6.1")
-    implementation ("androidx.lifecycle:lifecycle-livedata:2.6.1")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel:2.9.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata:2.9.1")
 
 }

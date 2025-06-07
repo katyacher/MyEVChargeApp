@@ -9,12 +9,19 @@ import java.util.List;
 
 @Dao
 public interface FavoriteDao {
-    @Query("SELECT * FROM favorites")
-    List<FavoriteStation> getAll();
-
     @Insert
-    void insert(FavoriteStation station);
+    void insert(FavoriteStation favorite);
 
     @Delete
-    void delete(FavoriteStation station);
+    void delete(FavoriteStation favorite);
+
+    @Query("DELETE FROM favorites WHERE stationId = :stationId")
+    void deleteByStationId(int stationId);
+
+    @Query("SELECT COUNT(*) FROM favorites WHERE stationId = :stationId")
+    int isFavorite(int stationId);
+
+    @Query("SELECT * FROM favorites")
+    List<FavoriteStation> getAllFavorites();
+
 }
