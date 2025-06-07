@@ -39,7 +39,7 @@ android {
         ))
     }
 
-    // Добавьте это для Java-кода:
+    //  для Java-кода:
     tasks.withType<JavaCompile> {
         options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:unchecked"))
     }
