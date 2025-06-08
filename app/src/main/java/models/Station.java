@@ -1,25 +1,36 @@
 package models;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 @Entity(tableName = "stations")
 public class Station {
     @PrimaryKey
     private int id;
+    @ColumnInfo(name = "name")
     private String name;
+    @ColumnInfo(name = "address")
     private String address;
+    @ColumnInfo(name = "workingHours")
     private String workingHours;
+    @ColumnInfo(name = "latitude")
     private double latitude;
+    @ColumnInfo(name = "longitude")
     private double longitude;
+    @ColumnInfo(name = "status")
     private String status;
-    //private boolean isFavorite; // Добавлено поле для избранного // определяется через таблицу favorites
+    @ColumnInfo(name = "isFavorite", defaultValue = "false")
+    private boolean isFavorite; // Добавлено поле для избранного // определяется через таблицу favorites
+    @ColumnInfo(name = "locationDescription")
     private String locationDescription; // Для подробного описания
+    @ColumnInfo(name = "power")
     private double power; // Мощность станции (кВт)
+    @ColumnInfo(name = "tariff")
     private double tariff; // Тариф (руб/кВт·ч)
 
     // Конструктор
     public Station(int id, String name, String status, String address,
                    String workingHours, double latitude, double longitude, String locationDescription,
-                   double power, double tariff) {
+                   double power, double tariff,  boolean isFavorite) {
         this.id = id;
         this.name = name;
         this.status = status;
@@ -30,7 +41,7 @@ public class Station {
         this.locationDescription = locationDescription;
         this.power = power;
         this.tariff = tariff;
-       // this.isFavorite = false; // По умолчанию не в избранном
+        this.isFavorite = isFavorite; // По умолчанию не в избранном
     }
 
     // Геттеры для всех полей
@@ -39,8 +50,8 @@ public class Station {
     public String getStatus() { return status; }
     public String getAddress() { return address; }
     public String getWorkingHours() { return workingHours; }
-    //public boolean isFavorite() { return isFavorite; }
-    //public void setFavorite(boolean favorite) { isFavorite = favorite; }
+    public boolean isFavorite() { return isFavorite; }
+    public void setFavorite(boolean favorite) { isFavorite = favorite; }
     public String getLocationDescription() { return locationDescription; }
     public double getPower() { return power; }
     public double getTariff() { return tariff; }

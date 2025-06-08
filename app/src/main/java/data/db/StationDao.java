@@ -13,18 +13,23 @@ import models.Station;
 public interface StationDao {
     @Insert
     void insert(Station station);
+    @Insert
+    void insertAll(List<Station> stations);
 
     @Update
     void update(Station station);
 
     @Query("SELECT * FROM stations")
-    LiveData<List<Station>> getAllStations(); // Возвращаем LiveData
+    LiveData<List<Station>> getAllStations();
 
     @Query("SELECT * FROM stations WHERE id = :id")
     Station getStationById(int id);
 
-    @Query("SELECT s.* FROM stations s INNER JOIN favorites f ON s.id = f.stationId")
-    LiveData<List<Station>> getFavoriteStations(); // Возвращаем LiveData
+    @Query("SELECT * FROM stations WHERE isFavorite = 1")
+    LiveData<List<Station>> getFavoriteStations();
+
+    @Query("UPDATE stations SET isFavorite = :isFavorite WHERE id = :stationId")
+    void setFavorite(int stationId, boolean isFavorite);
     @Query("SELECT * FROM stations")
     List<Station> getAllStationsSync(); // Без LiveData для инициализации бд
 }
