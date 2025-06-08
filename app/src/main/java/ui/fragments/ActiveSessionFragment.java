@@ -98,11 +98,6 @@ public class ActiveSessionFragment extends Fragment {
         // Обработчик клика по кнопке избранного
         btnFavorite.setOnClickListener(v -> {
             viewModel.toggleFavorite(stationId); //(session.getStation().getId())
-            Toast.makeText(getContext(),
-                    Boolean.TRUE.equals(viewModel.isFavorite(session.getStation().getId()).getValue()) ?
-                            "Добавлено в избранное" : "Удалено из избранного",
-                    Toast.LENGTH_SHORT).show();
-
 
             // Анимация кнопки
             v.animate()

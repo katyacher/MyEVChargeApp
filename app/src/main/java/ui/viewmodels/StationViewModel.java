@@ -55,21 +55,36 @@ public class StationViewModel extends AndroidViewModel {
         return favoriteStations;
     }
 
-    public LiveData<Station> getStationById(int stationId) {
+  /*  public LiveData<Station> getStationById(int stationId) {
         MutableLiveData<Station> result = new MutableLiveData<>();
         executor.execute(() -> {
             Station station = repository.getStationById(stationId);
             result.postValue(station);
         });
         return result;
-    }
-    public void toggleFavorite(int stationId) {
+    }*/
+    /*public void toggleFavorite(int stationId) {
         repository.toggleFavorite(stationId).observeForever(station -> {
             if (station != null) {
                 updateEvent.postValue(new Event<>(true));
                 loadFavoriteStations(); // Явно перезагружаем список
             }
         });
+    }*/
+
+    public LiveData<Station> getStationById(int stationId) {
+        return repository.getStationByIdLive(stationId); // Используем LiveData версию
+    }
+
+    public LiveData<Station> toggleFavorite(int stationId) {
+        MutableLiveData<Station> result = new MutableLiveData<>();
+        repository.toggleFavorite(stationId).observeForever(station -> {
+            if (station != null) {
+                result.postValue(station);
+                updateEvent.postValue(new Event<>(true));
+            }
+        });
+        return result;
     }
 
     /*public LiveData<Station> toggleFavorite(int stationId) {

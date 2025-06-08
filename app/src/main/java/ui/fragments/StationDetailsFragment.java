@@ -153,30 +153,39 @@ public class StationDetailsFragment extends Fragment {
     }
 
     private void setupFavoriteButton(ImageButton btnFavorite, int stationId) {
-        // Подписываемся на изменения статуса избранного
-        viewModel.isFavorite(stationId).observe(getViewLifecycleOwner(), isFavorite -> {
-            btnFavorite.setImageResource(isFavorite ?
-                    R.drawable.ic_favorite_filled : R.drawable.ic_favorite_outline);
-            btnFavorite.setContentDescription(isFavorite ?
-                    "Удалить из избранного" : "Добавить в избранное");
+        // Подписываемся на изменения  станции
+        viewModel.getStationById(stationId).observe(getViewLifecycleOwner(), station -> {
+            if (station != null) {
+                btnFavorite.setImageResource(station.isFavorite()
+                        ? R.drawable.ic_favorite_filled
+                        : R.drawable.ic_favorite_outline);
+            }
         });
-
+        
         btnFavorite.setOnClickListener(v -> {
-            viewModel.toggleFavorite(stationId);
-            Toast.makeText(requireContext(),
-                    Boolean.TRUE.equals(viewModel.isFavorite(stationId).getValue()) ?
-                            "Добавлено в избранное" : "Удалено из избранного",
-                    Toast.LENGTH_SHORT).show();
+            viewModel.toggleFavorite(stationId).observe(getViewLifecycleOwner(), updatedStation -> {
+                if (updatedStation != null) {
+                    // Анимация и мгновенное обновление
+                    btnFavorite.setImageResource(updatedStation.isFavorite()
+                            ? R.drawable.ic_favorite_filled
+                            : R.drawable.ic_favorite_outline);
 
+                    v.animate()
+                            .scaleX(0.8f).scaleY(0.8f)
+                            .setDuration(100)
+                            .withEndAction(() ->
+                                    v.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+                            ).start();
+                }
+            });
 
-
-            // Анимация кнопки
+            /* Анимация кнопки
             v.animate()
                     .scaleX(0.8f).scaleY(0.8f)
                     .setDuration(100)
                     .withEndAction(() ->
                             v.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
-                    ).start();
+                    ).start();*/
         });
     }
 }

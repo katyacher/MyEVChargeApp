@@ -42,7 +42,26 @@ public class StationRepository {
     public Station getStationById(int id) {
         return stationDao.getStationById(id);
     }
+    public LiveData<Station> toggleFavorite(int stationId) {
+        MutableLiveData<Station> result = new MutableLiveData<>();
+        executor.execute(() -> {
+            // Получаем станцию перед изменением
+            Station station = stationDao.getStationById(stationId);
+            if (station != null) {
+                boolean newStatus = !station.isFavorite();
+                stationDao.setFavorite(stationId, newStatus);
 
+                // Явно получаем обновленную станцию
+                Station updatedStation = stationDao.getStationById(stationId);
+                result.postValue(updatedStation);
+
+                Log.d("StationRepository", "Toggled favorite for station " + stationId +
+                        " to " + newStatus);
+            }
+        });
+        return result;
+    }
+    /*
     public  LiveData<Station> toggleFavorite(int stationId) {
         MutableLiveData<Station> result = new MutableLiveData<>();
         executor.execute(() -> {
@@ -57,11 +76,14 @@ public class StationRepository {
             }
         });
         return result;
-    }
+    } */
     public void setFavorite(int stationId, boolean isFavorite) {
         executor.execute(() -> {
             stationDao.setFavorite(stationId, isFavorite);
         });
+    }
+    public  LiveData<Station> getStationByIdLive(int stationId) {
+        return stationDao.getStationByIdLive(stationId);  // возвращает LiveData
     }
 }
 
