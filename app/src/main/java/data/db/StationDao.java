@@ -48,4 +48,8 @@ public interface StationDao {
     }
     @Query("SELECT isFavorite FROM stations WHERE id = :stationId")
     LiveData<Boolean> isFavorite(int stationId);
+
+    // Добавьте этот метод
+    @Query("SELECT * FROM stations WHERE id = :stationId")
+    LiveData<Station> getStationByIdLive(int stationId);
 }
