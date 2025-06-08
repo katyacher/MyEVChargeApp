@@ -67,6 +67,47 @@ public class Station {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Station station = (Station) o;
+
+        return id == station.id &&
+                Double.compare(station.latitude, latitude) == 0 &&
+                Double.compare(station.longitude, longitude) == 0 &&
+                isFavorite == station.isFavorite &&
+                Double.compare(station.power, power) == 0 &&
+                Double.compare(station.tariff, tariff) == 0 &&
+                name.equals(station.name) &&
+                address.equals(station.address) &&
+                workingHours.equals(station.workingHours) &&
+                status.equals(station.status) &&
+                locationDescription.equals(station.locationDescription);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + address.hashCode();
+        result = 31 * result + workingHours.hashCode();
+        temp = Double.doubleToLongBits(latitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(longitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + status.hashCode();
+        result = 31 * result + (isFavorite ? 1 : 0);
+        result = 31 * result + locationDescription.hashCode();
+        temp = Double.doubleToLongBits(power);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(tariff);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }
 
 

@@ -164,6 +164,7 @@ public class StationDetailsFragment extends Fragment {
         btnFavorite.setOnClickListener(v -> {
             viewModel.toggleFavorite(stationId);
 
+
             // Анимация кнопки
             v.animate()
                     .scaleX(0.8f).scaleY(0.8f)

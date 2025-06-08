@@ -70,6 +70,11 @@ public class FavoritesFragment extends Fragment implements StationAdapter.OnStat
                 showStationsList(stations);
             }
         });
+        viewModel.getUpdateEvent().observe(getViewLifecycleOwner(), event -> {
+            if (event != null && event.getContentIfNotHandled() != null) {
+                viewModel.loadFavoriteStations();
+            }
+        });
     }
 
     private void showEmptyState() {
@@ -96,7 +101,10 @@ public class FavoritesFragment extends Fragment implements StationAdapter.OnStat
     @Override
     public void onDeleteClick(Station station) {
         viewModel.toggleFavorite(station.getId());
-        Toast.makeText(requireContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show();
+       Toast.makeText(requireContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show();
+        // viewModel.toggleFavorite(station.getId()).observe(getViewLifecycleOwner(), updatedStation -> {
+            // Список автоматически обновится через LiveData в getFavoriteStations()
+       // });
     }
 
     @Override

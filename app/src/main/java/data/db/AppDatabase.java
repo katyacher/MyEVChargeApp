@@ -39,33 +39,88 @@ public abstract class AppDatabase extends RoomDatabase {
                                         //    dao.insertAll(createInitialStations());
                                        // }
                                         // Вставляем начальные данные напрямую через SQL
-                                        db.execSQL("INSERT INTO stations (id, name, status, address, workingHours, " +
+                                        String sql = "INSERT INTO stations (id, name, status, address, workingHours, " +
                                                 "latitude, longitude, locationDescription, power, tariff, isFavorite) " +
-                                                "VALUES (1, 'BRYANSKAYA4', 'free', 'Красноярск, ул. Брянская, 4', " +
-                                                "'Круглосуточно', 56.020215, 92.875344, 'Заправка Лукойл', 50.0, 5.5, 0)");
+                                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                                        db.execSQL("INSERT INTO stations (id, name, status, address, workingHours, " +
-                                                "latitude, longitude, locationDescription, power, tariff, isFavorite) " +
-                                                "VALUES (2, 'MYRA55', 'Свободно', 'Красноярск, ул. Мира, 55', " +
-                                                "'Круглосуточно', 56.011812, 92.872829, 'Парковка торгового центра', 50.0, 5.5, 0)");
+                                        // Станция 1
+                                        db.execSQL(sql, new Object[]{
+                                                1,
+                                                "BRYANSKAYA4",
+                                                "free",
+                                                "Красноярск, ул. Брянская, 4",
+                                                "Круглосуточно",
+                                                56.020215,
+                                                92.875344,
+                                                "Заправка Лукойл",
+                                                50.0,
+                                                5.5,
+                                                0
+                                        });
 
-                                        db.execSQL("INSERT INTO stations (id, name, status, address, workingHours, " +
-                                                "latitude, longitude, locationDescription, power, tariff, isFavorite) " +
-                                                "VALUES (3, 'PLANETA77', 'Свободно', 'Красноярск, пр. 9 Мая, 77', " +
-                                                "'Круглосуточно', 56.0509171, 92.9044525, 'Парковка торгового центра ''Планета''', 50.0, 5.5, 0)");
+                                        // Станция 2
+                                        db.execSQL(sql, new Object[]{
+                                                2,
+                                                "MYRA55",
+                                                "Свободно",
+                                                "Красноярск, ул. Мира, 55",
+                                                "Круглосуточно",
+                                                56.011812,
+                                                92.872829,
+                                                "Парковка торгового центра",
+                                                50.0,
+                                                5.5,
+                                                0
+                                        });
 
-                                        db.execSQL("INSERT INTO stations (id, name, status, address, workingHours, " +
-                                                "latitude, longitude, locationDescription, power, tariff, isFavorite) " +
-                                                "VALUES (4, 'PROFF64', 'Не в сети', 'Красноярск, ул.Профсоюзов, 64', " +
-                                                "'8:00-22:00', 56.015243, 92.837723, 'Заправка', 50.0, 5.5, 0)");
+                                        // Станция 3
+                                        db.execSQL(sql, new Object[]{
+                                                3,
+                                                "PLANETA77",
+                                                "Свободно",
+                                                "Красноярск, пр. 9 Мая, 77",
+                                                "Круглосуточно",
+                                                56.0509171,
+                                                92.9044525,
+                                                "Парковка торгового центра 'Планета'",
+                                                50.0,
+                                                5.5,
+                                                0
+                                        });
 
-                                        db.execSQL("INSERT INTO stations (id, name, status, address, workingHours, " +
-                                                "latitude, longitude, locationDescription, power, tariff, isFavorite) " +
-                                                "VALUES (5, 'MICHURINA2', 'Занято', 'Красноярск, ул. Мичурина, 2Г', " +
-                                                "'8:00-22:00', 56.013326, 92.959363, 'Заправка', 50.0, 5.5, 0)");
+                                        // Станция 4
+                                        db.execSQL(sql, new Object[]{
+                                                4,
+                                                "PROFF64",
+                                                "Не в сети",
+                                                "Красноярск, ул.Профсоюзов, 64",
+                                                "8:00-22:00",
+                                                56.015243,
+                                                92.837723,
+                                                "Заправка",
+                                                50.0,
+                                                5.5,
+                                                0
+                                        });
+
+                                        // Станция 5
+                                        db.execSQL(sql, new Object[]{
+                                                5,
+                                                "MICHURINA2",
+                                                "Занято",
+                                                "Красноярск, ул. Мичурина, 2Г",
+                                                "8:00-22:00",
+                                                56.013326,
+                                                92.959363,
+                                                "Заправка",
+                                                50.0,
+                                                5.5,
+                                                0
+                                        });
                                     });
                                 }
                             }).addMigrations(MIGRATION_1_2)
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

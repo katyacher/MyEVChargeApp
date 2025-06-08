@@ -43,16 +43,20 @@ public class StationRepository {
         return stationDao.getStationById(id);
     }
 
-    public void toggleFavorite(int stationId) {
+    public  LiveData<Station> toggleFavorite(int stationId) {
+        MutableLiveData<Station> result = new MutableLiveData<>();
         executor.execute(() -> {
             Station station = stationDao.getStationById(stationId);
             if (station != null) {
                 boolean newFavoriteStatus = !station.isFavorite();
                 stationDao.setFavorite(stationId, newFavoriteStatus);
+                station.setFavorite(newFavoriteStatus);
+                result.postValue(station);
                 Log.d("StationRepository", "Toggled favorite for station " + stationId +
                         " to " + newFavoriteStatus);
             }
         });
+        return result;
     }
     public void setFavorite(int stationId, boolean isFavorite) {
         executor.execute(() -> {
