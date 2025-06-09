@@ -53,4 +53,7 @@
     <string name="phone">+7 999 999–99–99</string>
     <string name="email">user@example.com</string>
     <string name="history">История зарядок</string>
+
+    <string name="my_location">Мое местоположение</string>
+    <string name="permission_required">Для работы карты требуются разрешения</string>
 </resources>

@@ -87,4 +87,28 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel:2.9.1")
     implementation ("androidx.lifecycle:lifecycle-livedata:2.9.1")
 
+   // implementation ("org.osmdroid:osmdroid-android:6.1.13")
+   // implementation ("org.osmdroid:osmdroid-wms:6.1.13")
+   // implementation ("org.osmdroid:osmdroid-mapsforge:6.1.13") // Для оффлайн-карт (опционально)
+   // implementation ("com.github.MKergall:osmbonuspack:6.9.0") {
+   //     exclude(group = "org.osmdroid") // Чтобы избежать конфликтов версий
+   // }// Дополнительные функции (маркеры и т.д.)
+    // Для загрузки иконок
+   // implementation("com.github.bumptech.glide:glide:4.12.0")
+   // annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+    // OSMDroid core
+    implementation("org.osmdroid:osmdroid-android:6.1.14")
+
+    // OSMBonusPack (добавьте репозиторий JitPack в settings.gradle)
+    implementation("com.github.MKergall:osmbonuspack:6.9.0")
+
+    // Дополнительные модули OSMDroid (опционально)
+    implementation("org.osmdroid:osmdroid-wms:6.1.14")
+    implementation("org.osmdroid:osmdroid-mapsforge:6.1.14") {
+        exclude(group = "org.osmdroid") // чтобы избежать конфликта версий
+    }
+
+    // Для загрузки иконок
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }

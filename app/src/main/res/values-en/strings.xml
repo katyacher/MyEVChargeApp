@@ -52,4 +52,7 @@
     <string name="phone">+7 999 999–99–99</string>
     <string name="email">user@example.com</string>
     <string name="history">Charging History</string>
+
+    <string name="my_location">My location</string>
+    <string name="permission_required">The map requires permissions to work</string>
 </resources>

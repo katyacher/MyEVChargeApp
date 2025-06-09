@@ -161,7 +161,7 @@ public class StationDetailsFragment extends Fragment {
                         : R.drawable.ic_favorite_outline);
             }
         });
-        
+
         btnFavorite.setOnClickListener(v -> {
             viewModel.toggleFavorite(stationId).observe(getViewLifecycleOwner(), updatedStation -> {
                 if (updatedStation != null) {

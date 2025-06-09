@@ -117,4 +117,13 @@ public class StationViewModel extends AndroidViewModel {
     public LiveData<Event<Boolean>> getUpdateEvent() {
         return updateEvent;
     }
+    private final MutableLiveData<Station> selectedStation = new MutableLiveData<>();
+
+    public void setSelectedStation(Station station) {
+        selectedStation.postValue(station);
+    }
+
+    public LiveData<Station> getSelectedStation() {
+        return selectedStation;
+    }
 }

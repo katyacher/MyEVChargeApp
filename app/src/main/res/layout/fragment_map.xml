@@ -1,25 +1,25 @@
-<!-- fragment_map.xml -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Заглушка карты -->
-    <ImageView
-        android:id="@+id/map_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/map_screenshot"/>
+<org.osmdroid.views.MapView
+    android:id="@+id/mapView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
 
-    <!-- Карточка станции rv_station -->
 
-    <!-- Метка станции -->
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_charger_marker"
-        app:tint="@color/primary"/>
-</FrameLayout>
+<!-- Кнопка для возврата к текущему местоположению -->
+<ImageButton
+    android:id="@+id/btnMyLocation"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentBottom="true"
+    android:layout_margin="16dp"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:src="@drawable/ic_my_location"
+    android:contentDescription="@string/my_location"/>
+
+</RelativeLayout>
