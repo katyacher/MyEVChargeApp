@@ -56,4 +56,5 @@
 
     <string name="my_location">Мое местоположение</string>
     <string name="permission_required">Для работы карты требуются разрешения</string>
+    <string name="cacheManagerHandlingMessage" formatted="false">...</string>
 </resources>

@@ -1,14 +1,20 @@
 package ui.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,21 +27,33 @@ import androidx.navigation.Navigation;
 import com.caverock.androidsvg.BuildConfig;
 import com.example.myapplication.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.MapTileIndex;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Scanner;
 
 import models.Station;
 import ui.viewmodels.StationViewModel;
@@ -47,6 +65,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
     private StationViewModel viewModel;
     private ItemizedIconOverlay<OverlayItem> stationsOverlay;
     private ImageButton btnMyLocation;
+    // Добавьте эти поля
+    private Polyline routeOverlay;
+    private Marker startMarker;
+    private Marker endMarker;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,6 +106,17 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
                 mapView.getController().animateTo(myLocationOverlay.getMyLocation());
             }
         });
+
+        viewModel.getRouteEndPoint().observe(getViewLifecycleOwner(), endPoint -> {
+            if (endPoint != null && myLocationOverlay != null && myLocationOverlay.getMyLocation() != null) {
+                GeoPoint startPoint = myLocationOverlay.getMyLocation();
+                String stationName = viewModel.getRouteStationName().getValue();
+                buildRoute(startPoint, endPoint, stationName != null ? stationName : "Станция");
+
+                // Очищаем точку маршрута после построения
+                viewModel.clearRouteEndPoint();
+            }
+        });
     }
 
     private void initializeMap() {
@@ -105,11 +139,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
                         + mImageFilenameEnding;
             }
         });
-        mapView.setBuiltInZoomControls(false); // Лучше использовать жесты
-        mapView.setMultiTouchControls(true);
+        mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
+        mapView.setMultiTouchControls(true); // Лучше использовать жесты
 
         // Установка начального масштаба и положения
-        mapView.getController().setZoom(12.0);
+        mapView.getController().setZoom(19.0);
         mapView.getController().setCenter(new GeoPoint(56.010563, 92.852572)); // Красноярск по умолчанию
 
         requestPermissionsIfNecessary();
@@ -245,6 +279,123 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             }
         }
     }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void buildRoute(GeoPoint start, GeoPoint end, String stationName) {
+        // Удаляем предыдущий маршрут и маркеры
+        clearRoute();
+
+        // Создаем маркеры начала и конца
+        startMarker = new Marker(mapView);
+        startMarker.setPosition(start);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setIcon(getResources().getDrawable(R.drawable.ic_navigation));
+        mapView.getOverlays().add(startMarker);
+
+        endMarker = new Marker(mapView);
+        endMarker.setPosition(end);
+        endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        endMarker.setIcon(getResources().getDrawable(R.drawable.ic_charger_marker));
+        endMarker.setTitle(stationName);
+        mapView.getOverlays().add(endMarker);
+
+        // Строим маршрут (здесь можно использовать любой роутинг-сервис)
+        buildOSRMRoute(start, end);
+
+        // Центрируем карту на маршруте
+        mapView.getController().animateTo((IGeoPoint) new BoundingBox(
+                Math.max(start.getLatitude(), end.getLatitude()),
+                Math.max(start.getLongitude(), end.getLongitude()),
+                Math.min(start.getLatitude(), end.getLatitude()),
+                Math.min(start.getLongitude(), end.getLongitude())
+        ));
+        Log.d("ROUTE_DEBUG", "Start point: " + start.getLatitude() + ", " + start.getLongitude());
+        Log.d("ROUTE_DEBUG", "End point: " + end.getLatitude() + ", " + end.getLongitude());
+
+    }
+
+    private void buildOSRMRoute(GeoPoint start, GeoPoint end) {
+        new Thread(() -> {
+            try {
+                String url = String.format(Locale.US,
+                        "https://router.project-osrm.org/route/v1/driving/%f,%f;%f,%f?overview=full",
+                        start.getLongitude(), start.getLatitude(),
+                        end.getLongitude(), end.getLatitude());
+
+                HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setRequestMethod("GET");
+
+                if (connection.getResponseCode() == 200) {
+                    InputStream inputStream = connection.getInputStream();
+                    String json = new Scanner(inputStream).useDelimiter("\\A").next();
+
+                    JSONObject jsonObject = new JSONObject(json);
+                    JSONArray routes = jsonObject.getJSONArray("routes");
+                    JSONObject route = routes.getJSONObject(0);
+                    String geometry = route.getString("geometry");
+
+                    List<GeoPoint> points = decodePolyline(geometry);
+
+                    requireActivity().runOnUiThread(() -> {
+                        routeOverlay = new Polyline();
+                        routeOverlay.setPoints(points);
+                        routeOverlay.setColor(Color.parseColor("#3F51B5"));
+                        routeOverlay.setWidth(8f);
+                        mapView.getOverlays().add(routeOverlay);
+                        mapView.invalidate();
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private List<GeoPoint> decodePolyline(String encoded) {
+        List<GeoPoint> poly = new ArrayList<>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            poly.add(new GeoPoint(lat / 1E5, lng / 1E5));
+        }
+        return poly;
+    }
+
+    public void clearRoute() {
+        if (routeOverlay != null) {
+            mapView.getOverlays().remove(routeOverlay);
+            routeOverlay = null;
+        }
+        if (startMarker != null) {
+            mapView.getOverlays().remove(startMarker);
+            startMarker = null;
+        }
+        if (endMarker != null) {
+            mapView.getOverlays().remove(endMarker);
+            endMarker = null;
+        }
+        mapView.invalidate();
+    }
+
 }/* View Binding
 package ui.fragments;
 

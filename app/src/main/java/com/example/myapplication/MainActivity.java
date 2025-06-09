@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements StationDetailsFra
         // Улучшаем производительность
         getWindow().setBackgroundDrawable(null);
 
-
         setContentView(R.layout.activity_main);
 
         bottomNav = findViewById(R.id.bottom_navigation);

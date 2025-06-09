@@ -41,7 +41,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.StationV
     public static class StationViewHolder extends RecyclerView.ViewHolder {
         TextView tvStationName, tvStationAddress, tvWorkingHours, tvStatus;
         ImageButton btnFavorite;
-        View btnRoute;
+        View tvRoute;
 
         public StationViewHolder(View view) {
             super(view);
@@ -50,7 +50,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.StationV
             tvWorkingHours = view.findViewById(R.id.tv_working_hours);
             //tvStatus = view.findViewById(R.id.tv_status);
             btnFavorite = view.findViewById(R.id.btn_favorite);
-            //btnRoute = view.findViewById(R.id.btn_route);//tv_nav
+            tvRoute = view.findViewById(R.id.tv_nav);//tv_nav
         }
     }
 
@@ -91,10 +91,15 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.StationV
                         ).start();
             }
         });
-        // Обработчик клика по кнопке маршрута
-        if (holder.btnRoute != null) {
-            holder.btnRoute.setOnClickListener(v -> listener.onRouteClick(station));
-        }
+        /*Обработчик клика по кнопке маршрута
+        if (holder.tvRoute != null) {
+            holder.tvRoute.setOnClickListener(v -> listener.onRouteClick(station));
+        }*/
+        holder.tvRoute.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onRouteClick(station);
+            }
+        });
     }
 
     @Override

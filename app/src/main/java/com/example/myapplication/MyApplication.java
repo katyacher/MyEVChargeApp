@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
 import android.app.Application;
-import android.preference.PreferenceManager;
+import android.content.ComponentCallbacks2;
+
+import androidx.preference.PreferenceManager;
 
 import org.osmdroid.config.Configuration;
 
@@ -37,7 +39,7 @@ public class MyApplication extends Application {
     @Override
     public void onTrimMemory(int level) {
         // Сохраняем настройки OSMDroid перед завершением приложения для современных версий Android
-        if (level == TRIM_MEMORY_COMPLETE) {
+        if (level == ComponentCallbacks2.TRIM_MEMORY_COMPLETE) {
             Configuration.getInstance().save(
                     getApplicationContext(),
                     PreferenceManager.getDefaultSharedPreferences(getApplicationContext())

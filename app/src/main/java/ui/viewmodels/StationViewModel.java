@@ -17,6 +17,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -125,5 +127,28 @@ public class StationViewModel extends AndroidViewModel {
 
     public LiveData<Station> getSelectedStation() {
         return selectedStation;
+    }
+
+    private MutableLiveData<GeoPoint> routeEndPoint = new MutableLiveData<>();
+    private MutableLiveData<String> routeStationName = new MutableLiveData<>();
+
+    public void setRouteEndPoint(GeoPoint point) {
+        routeEndPoint.setValue(point);
+    }
+
+    public LiveData<GeoPoint> getRouteEndPoint() {
+        return routeEndPoint;
+    }
+
+    public void setRouteStationName(String name) {
+        routeStationName.setValue(name);
+    }
+
+    public LiveData<String> getRouteStationName() {
+        return routeStationName;
+    }
+
+    public void clearRouteEndPoint() {
+        routeEndPoint.setValue(null);
     }
 }

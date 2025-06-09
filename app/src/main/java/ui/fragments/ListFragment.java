@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +88,17 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
 
     @Override
     public void onRouteClick(Station station) {
-        // Построение маршрута
+        // Получаем ViewModel
+        StationViewModel viewModel = new ViewModelProvider(requireActivity()).get(StationViewModel.class);
+
+        // Устанавливаем конечную точку маршрута
+        viewModel.setRouteEndPoint(new GeoPoint(station.getLatitude(), station.getLongitude()));
+        viewModel.setRouteStationName(station.getName());
+
+        // Переключаемся на фрагмент карты
+        Navigation.findNavController(requireView())
+                .navigate(R.id.action_list_to_map);
+        Log.d("ROUTE_CLICK", "Route requested to station: " + station.getName());
     }
 
     private void navigateToStationDetails(int stationId) {

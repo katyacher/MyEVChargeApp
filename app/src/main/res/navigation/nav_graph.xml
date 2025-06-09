@@ -57,6 +57,11 @@
         <action
             android:id="@+id/action_list_to_details"
             app:destination="@id/stationDetailsFragment" />
+        <action
+            android:id="@+id/action_list_to_map"
+            app:destination="@id/mapFragment"
+            app:popUpTo="@id/mapFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- Экран 5: Избранное -->

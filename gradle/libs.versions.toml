@@ -13,6 +13,7 @@ navigation = "2.7.7"
 yandexMaps = "4.4.0-full"
 constraintlayoutVersion = "2.2.1"
 materialVersion = "1.12.0"
+preference = "1.2.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -38,6 +39,7 @@ navigation-fragment = { group = "androidx.navigation", name = "navigation-fragme
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigation" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayoutVersion" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
+androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 
 
 [plugins]
