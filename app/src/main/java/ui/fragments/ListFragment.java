@@ -1,5 +1,7 @@
 package ui.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,12 +11,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 
 import org.osmdroid.util.GeoPoint;
@@ -28,6 +32,9 @@ import ui.viewmodels.StationViewModel;
 public class ListFragment extends Fragment implements StationAdapter.OnStationClickListener {
     private StationViewModel viewModel;
     private StationAdapter adapter;
+    // Добавьте константу для запроса разрешений
+    private static final int REQUEST_LOCATION_PERMISSION = 1001;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,11 +93,8 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
         // Не используется в этом фрагменте
     }
 
-    @Override
+    /* @Override
     public void onRouteClick(Station station) {
-        // Получаем ViewModel
-        StationViewModel viewModel = new ViewModelProvider(requireActivity()).get(StationViewModel.class);
-
         // Устанавливаем конечную точку маршрута
         viewModel.setRouteEndPoint(new GeoPoint(station.getLatitude(), station.getLongitude()));
         viewModel.setRouteStationName(station.getName());
@@ -101,6 +105,64 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
         Log.d("ROUTE_CLICK", "Route requested to station: " + station.getName());
     }
 
+    @Override
+    public void onRouteClick(Station station) {
+        GeoPoint destination = new GeoPoint(station.getLatitude(), station.getLongitude());
+
+        // Проверяем разрешения на местоположение
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            // Если разрешения есть, открываем Яндекс.Карты
+            if (getActivity() != null) {
+                ((MainActivity) getActivity()).openYandexMapsRoute(destination, station.getName());
+            }
+        } else {
+            // Запрашиваем разрешения
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        }
+    } */
+    @Override
+    public void onRouteClick(Station station) {
+        GeoPoint destination = new GeoPoint(station.getLatitude(), station.getLongitude());
+
+        // Проверяем разрешения
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            // Если разрешение есть, открываем Яндекс.Карты через Activity
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openYandexMapsRoute(destination, station.getName());
+            }
+        } else {
+            // Запрашиваем разрешение
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        }
+    }
+
+    // Обработка результата запроса разрешений
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // Разрешение получено, можно выполнить действие
+                Toast.makeText(requireContext(),
+                        "Разрешение получено. Нажмите на маршрут еще раз",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(),
+                        "Для построения маршрута необходимо разрешение",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
     private void navigateToStationDetails(int stationId) {
         Bundle args = new Bundle();
         args.putInt("stationId", stationId);

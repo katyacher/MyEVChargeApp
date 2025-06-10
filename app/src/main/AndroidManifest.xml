@@ -40,6 +40,11 @@
         android:maxSdkVersion="28"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-</manifest>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="yandexmaps" />
+        </intent>
+    </queries>
+    </manifest>
 

@@ -23,4 +23,21 @@
     android:src="@drawable/ic_navigation"
     android:contentDescription="@string/my_location"/>
 
+    <ProgressBar
+        android:id="@+id/routeProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+    <!-- Кнопка очистки маршрута
+    <ImageButton
+        android:id="@+id/btnClearRoute"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_clear_route"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"/> -->
+
 </RelativeLayout>

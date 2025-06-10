@@ -62,7 +62,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                         db.execSQL(sql, new Object[]{
                                                 2,
                                                 "MYRA55",
-                                                "Свободно",
+                                                "free",
                                                 "Красноярск, ул. Мира, 55",
                                                 "Круглосуточно",
                                                 56.011812,
@@ -77,7 +77,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                         db.execSQL(sql, new Object[]{
                                                 3,
                                                 "PLANETA77",
-                                                "Свободно",
+                                                "free",
                                                 "Красноярск, пр. 9 Мая, 77",
                                                 "Круглосуточно",
                                                 56.0509171,
@@ -92,7 +92,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                         db.execSQL(sql, new Object[]{
                                                 4,
                                                 "PROFF64",
-                                                "Не в сети",
+                                                "offline",
                                                 "Красноярск, ул.Профсоюзов, 64",
                                                 "8:00-22:00",
                                                 56.015243,
@@ -107,7 +107,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                         db.execSQL(sql, new Object[]{
                                                 5,
                                                 "MICHURINA2",
-                                                "Занято",
+                                                "busy",
                                                 "Красноярск, ул. Мичурина, 2Г",
                                                 "8:00-22:00",
                                                 56.013326,

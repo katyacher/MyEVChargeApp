@@ -3,9 +3,13 @@ package ui.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -54,6 +58,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import models.Station;
 import ui.viewmodels.StationViewModel;
@@ -66,9 +72,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
     private ItemizedIconOverlay<OverlayItem> stationsOverlay;
     private ImageButton btnMyLocation;
     // Добавьте эти поля
-    private Polyline routeOverlay;
-    private Marker startMarker;
-    private Marker endMarker;
+
 
 
     @Override
@@ -85,6 +89,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         // Находим элементы вью
         mapView = view.findViewById(R.id.mapView);
         btnMyLocation = view.findViewById(R.id.btnMyLocation);
+       // btnClearRoute = view.findViewById(R.id.btnClearRoute);
 
         // Инициализация карты
         initializeMap();
@@ -106,12 +111,14 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
                 mapView.getController().animateTo(myLocationOverlay.getMyLocation());
             }
         });
+        // Кнопка "Очистка маршрута"
+       // btnClearRoute.setOnClickListener(v -> clearRoute());
 
         viewModel.getRouteEndPoint().observe(getViewLifecycleOwner(), endPoint -> {
             if (endPoint != null && myLocationOverlay != null && myLocationOverlay.getMyLocation() != null) {
                 GeoPoint startPoint = myLocationOverlay.getMyLocation();
                 String stationName = viewModel.getRouteStationName().getValue();
-                buildRoute(startPoint, endPoint, stationName != null ? stationName : "Станция");
+                //buildRoute(startPoint, endPoint, stationName != null ? stationName : "Станция");
 
                 // Очищаем точку маршрута после построения
                 viewModel.clearRouteEndPoint();
@@ -164,13 +171,25 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         }
 
         List<OverlayItem> items = new ArrayList<>();
-        Drawable stationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_charger_marker);
+        //Drawable stationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_charger_marker);
 
         for (Station station : stations) {
             GeoPoint point = new GeoPoint(station.getLatitude(), station.getLongitude());
             OverlayItem item = new OverlayItem(station.getName(), station.getAddress(), point);
-            if (stationIcon != null) {
+            /* if (stationIcon != null) {
                 item.setMarker(stationIcon);
+            }*/
+            // Устанавливаем иконку в зависимости от статуса
+            switch (station.getStatus()) {
+                case "busy":
+                    item.setMarker(ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_busy));
+                    break;
+                case "free":
+                    item.setMarker(ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_free));
+                    break;
+                case "offline":
+                default:
+                    item.setMarker(ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_offline));
             }
             items.add(item);
         }
@@ -194,6 +213,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
 
         mapView.getOverlays().add(stationsOverlay);
         mapView.invalidate(); // Обновляем карту
+
     }
 
     private void zoomToStations(List<Station> stations) {
@@ -267,6 +287,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         mapView = null;
         btnMyLocation = null;
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //routeExecutor.shutdownNow();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -279,124 +304,45 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             }
         }
     }
-    @SuppressLint("UseCompatLoadingForDrawables")
-    public void buildRoute(GeoPoint start, GeoPoint end, String stationName) {
-        // Удаляем предыдущий маршрут и маркеры
-        clearRoute();
 
-        // Создаем маркеры начала и конца
-        startMarker = new Marker(mapView);
-        startMarker.setPosition(start);
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        startMarker.setIcon(getResources().getDrawable(R.drawable.ic_navigation));
-        mapView.getOverlays().add(startMarker);
-
-        endMarker = new Marker(mapView);
-        endMarker.setPosition(end);
-        endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        endMarker.setIcon(getResources().getDrawable(R.drawable.ic_charger_marker));
-        endMarker.setTitle(stationName);
-        mapView.getOverlays().add(endMarker);
-
-        // Строим маршрут (здесь можно использовать любой роутинг-сервис)
-        buildOSRMRoute(start, end);
-
-        // Центрируем карту на маршруте
-        mapView.getController().animateTo((IGeoPoint) new BoundingBox(
-                Math.max(start.getLatitude(), end.getLatitude()),
-                Math.max(start.getLongitude(), end.getLongitude()),
-                Math.min(start.getLatitude(), end.getLatitude()),
-                Math.min(start.getLongitude(), end.getLongitude())
-        ));
-        Log.d("ROUTE_DEBUG", "Start point: " + start.getLatitude() + ", " + start.getLongitude());
-        Log.d("ROUTE_DEBUG", "End point: " + end.getLatitude() + ", " + end.getLongitude());
-
+    private void showProgress(boolean show) {
+        requireView().findViewById(R.id.routeProgress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    private void buildOSRMRoute(GeoPoint start, GeoPoint end) {
-        new Thread(() -> {
-            try {
-                String url = String.format(Locale.US,
-                        "https://router.project-osrm.org/route/v1/driving/%f,%f;%f,%f?overview=full",
-                        start.getLongitude(), start.getLatitude(),
-                        end.getLongitude(), end.getLatitude());
-
-                HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-                connection.setRequestMethod("GET");
-
-                if (connection.getResponseCode() == 200) {
-                    InputStream inputStream = connection.getInputStream();
-                    String json = new Scanner(inputStream).useDelimiter("\\A").next();
-
-                    JSONObject jsonObject = new JSONObject(json);
-                    JSONArray routes = jsonObject.getJSONArray("routes");
-                    JSONObject route = routes.getJSONObject(0);
-                    String geometry = route.getString("geometry");
-
-                    List<GeoPoint> points = decodePolyline(geometry);
-
-                    requireActivity().runOnUiThread(() -> {
-                        routeOverlay = new Polyline();
-                        routeOverlay.setPoints(points);
-                        routeOverlay.setColor(Color.parseColor("#3F51B5"));
-                        routeOverlay.setWidth(8f);
-                        mapView.getOverlays().add(routeOverlay);
-                        mapView.invalidate();
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
+    private boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager)requireContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
-
-    private List<GeoPoint> decodePolyline(String encoded) {
-        List<GeoPoint> poly = new ArrayList<>();
-        int index = 0, len = encoded.length();
-        int lat = 0, lng = 0;
-
-        while (index < len) {
-            int b, shift = 0, result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lat += dlat;
-
-            shift = 0;
-            result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lng += dlng;
-
-            poly.add(new GeoPoint(lat / 1E5, lng / 1E5));
-        }
-        return poly;
-    }
-
-    public void clearRoute() {
+    /* Обработка поворота экрана
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
         if (routeOverlay != null) {
-            mapView.getOverlays().remove(routeOverlay);
-            routeOverlay = null;
+            outState.putSerializable("route_points", new ArrayList<>(routeOverlay.getPoints()));
         }
-        if (startMarker != null) {
-            mapView.getOverlays().remove(startMarker);
-            startMarker = null;
-        }
-        if (endMarker != null) {
-            mapView.getOverlays().remove(endMarker);
-            endMarker = null;
-        }
-        mapView.invalidate();
-    }
+    }*/
 
-}/* View Binding
+
+}
+/* Обработка поворота экрана способ 2
+@Override
+public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    super.onViewStateRestored(savedInstanceState);
+    if (savedInstanceState != null && savedInstanceState.containsKey("route_points")) {
+        List<GeoPoint> points = (List<GeoPoint>) savedInstanceState.getSerializable("route_points");
+        if (points != null && !points.isEmpty()) {
+            routeOverlay = new Polyline();
+            routeOverlay.setPoints(points);
+            routeOverlay.setColor(Color.parseColor("#3F51B5"));
+            mapView.getOverlays().add(routeOverlay);
+        }
+    }
+}
+ */
+
+/* View Binding
 package ui.fragments;
 
 
@@ -593,7 +539,43 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         super.onDestroyView();
         binding = null;
     }
-}*/
+}
+  @SuppressLint("UseCompatLoadingForDrawables")
+    public void buildRoute(GeoPoint start, GeoPoint end, String stationName) {
+        // Удаляем предыдущий маршрут и маркеры
+        clearRoute();
+
+        // Создаем маркеры начала и конца
+        startMarker = new Marker(mapView);
+        startMarker.setPosition(start);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setIcon(getResources().getDrawable(R.drawable.ic_navigation));
+        mapView.getOverlays().add(startMarker);
+
+        endMarker = new Marker(mapView);
+        endMarker.setPosition(end);
+        endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        endMarker.setIcon(getResources().getDrawable(R.drawable.ic_charger_marker));
+        endMarker.setTitle(stationName);
+        mapView.getOverlays().add(endMarker);
+
+        // Строим маршрут (здесь можно использовать любой роутинг-сервис)
+        buildOSRMRoute(start, end);
+
+        // Центрируем карту на маршруте
+        mapView.getController().animateTo((IGeoPoint) new BoundingBox(
+                Math.max(start.getLatitude(), end.getLatitude()),
+                Math.max(start.getLongitude(), end.getLongitude()),
+                Math.min(start.getLatitude(), end.getLatitude()),
+                Math.min(start.getLongitude(), end.getLongitude())
+        ));
+        Log.d("ROUTE_DEBUG", "Start point: " + start.getLatitude() + ", " + start.getLongitude());
+        Log.d("ROUTE_DEBUG", "End point: " + end.getLatitude() + ", " + end.getLongitude());
+
+    }*/
+
+
+
 /*package ui.fragments;
 
 import android.os.Bundle;
@@ -640,4 +622,172 @@ public class MapFragment extends Fragment {
         }
     }
 }
+
+
+
+private Polyline routeOverlay;
+    private Marker startMarker;
+    private Marker endMarker;
+    private ImageButton btnClearRoute;
+    private final ExecutorService routeExecutor = Executors.newSingleThreadExecutor();
+
+ @SuppressLint("UseCompatLoadingForDrawables")
+    public void buildRoute(GeoPoint start, GeoPoint end, String stationName) {
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            Toast.makeText(requireContext(), "Требуется разрешение на доступ к местоположению",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        clearRoute();
+        showProgress(true);
+
+        // Маркер начала
+        startMarker = new Marker(mapView);
+        startMarker.setPosition(start);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_navigation));
+        startMarker.setTitle("Ваше местоположение");
+        mapView.getOverlays().add(startMarker);
+
+        // Маркер конца
+        endMarker = new Marker(mapView);
+        endMarker.setPosition(end);
+        endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        endMarker.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_charger_marker));
+        endMarker.setTitle(stationName);
+        mapView.getOverlays().add(endMarker);
+
+        if (isOnline()) {
+            buildOSRMRoute(start, end);
+        } else {
+            // Оффлайн-режим: прямая линия между точками
+            List<GeoPoint> points = new ArrayList<>();
+            points.add(start);
+            points.add(end);
+
+            routeOverlay = new Polyline();
+            routeOverlay.setPoints(points);
+            routeOverlay.setColor(Color.BLUE);
+            routeOverlay.setWidth(5f);
+            mapView.getOverlays().add(routeOverlay);
+
+            showProgress(false);
+            Toast.makeText(requireContext(), "Нет интернет-соединения",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Анимация к маршруту
+        BoundingBox box = new BoundingBox(
+                Math.max(start.getLatitude(), end.getLatitude()) + 0.01,
+                Math.max(start.getLongitude(), end.getLongitude()) + 0.01,
+                Math.min(start.getLatitude(), end.getLatitude()) - 0.01,
+                Math.min(start.getLongitude(), end.getLongitude()) - 0.01
+        );
+        mapView.zoomToBoundingBox(box, false, 50);
+        btnClearRoute.setVisibility(View.VISIBLE);
+    }
+
+    private void buildOSRMRoute(GeoPoint start, GeoPoint end) {
+        Log.d("ROUTE_DEBUG", "Starting OSRM route request");
+        routeExecutor.execute(() -> {
+            try {
+                String url = String.format(Locale.US,
+                        "https://router.project-osrm.org/route/v1/driving/%f,%f;%f,%f?overview=full",
+                        start.getLongitude(), start.getLatitude(),
+                        end.getLongitude(), end.getLatitude());
+
+                Log.d("ROUTE_DEBUG", "Request URL: " + url);
+
+                HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setRequestMethod("GET");
+                connection.setConnectTimeout(15000);
+                connection.setReadTimeout(15000);
+
+                int responseCode = connection.getResponseCode();
+                Log.d("ROUTE_DEBUG", "Response code: " + responseCode);
+
+                if (connection.getResponseCode() == 200) {
+                    InputStream inputStream = connection.getInputStream();
+                    String json = new Scanner(inputStream).useDelimiter("\\A").next();
+
+                    Log.d("ROUTE_DEBUG", "Response JSON: " + json.substring(0, Math.min(100, json.length())));
+
+                    JSONObject jsonObject = new JSONObject(json);
+                    JSONArray routes = jsonObject.getJSONArray("routes");
+                    JSONObject route = routes.getJSONObject(0);
+                    String geometry = route.getString("geometry");
+
+                    List<GeoPoint> points = decodePolyline(geometry);
+
+                    requireActivity().runOnUiThread(() -> {
+                        routeOverlay = new Polyline();
+                        routeOverlay.setPoints(points);
+                        routeOverlay.setColor(Color.parseColor("#3F51B5"));
+                        routeOverlay.setWidth(8f);
+                        mapView.getOverlays().add(routeOverlay);
+                        mapView.invalidate();
+                    });
+                } else {
+                    Log.e("ROUTE_ERROR", "Server returned: " + responseCode);
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(requireContext(), "Ошибка построения маршрута", Toast.LENGTH_SHORT).show());
+                }
+            } catch (Exception e) {
+                Log.e("ROUTE_ERROR", "Exception in OSRM request", e);
+                Log.e("MapFragment", "Ошибка построения маршрута", e);
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Ошибка при построении маршрута", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private List<GeoPoint> decodePolyline(String encoded) {
+        List<GeoPoint> poly = new ArrayList<>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            poly.add(new GeoPoint(lat / 1E5, lng / 1E5));
+        }
+        return poly;
+    }
+
+    public void clearRoute() {
+        if (routeOverlay != null) {
+            mapView.getOverlays().remove(routeOverlay);
+            routeOverlay = null;
+        }
+        if (startMarker != null) {
+            mapView.getOverlays().remove(startMarker);
+            startMarker = null;
+        }
+        if (endMarker != null) {
+            mapView.getOverlays().remove(endMarker);
+            endMarker = null;
+        }
+        btnClearRoute.setVisibility(View.GONE);
+        mapView.invalidate();
+    }
 */
