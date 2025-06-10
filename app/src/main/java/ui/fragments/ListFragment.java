@@ -93,36 +93,7 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
         // Не используется в этом фрагменте
     }
 
-    /* @Override
-    public void onRouteClick(Station station) {
-        // Устанавливаем конечную точку маршрута
-        viewModel.setRouteEndPoint(new GeoPoint(station.getLatitude(), station.getLongitude()));
-        viewModel.setRouteStationName(station.getName());
 
-        // Переключаемся на фрагмент карты
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_list_to_map);
-        Log.d("ROUTE_CLICK", "Route requested to station: " + station.getName());
-    }
-
-    @Override
-    public void onRouteClick(Station station) {
-        GeoPoint destination = new GeoPoint(station.getLatitude(), station.getLongitude());
-
-        // Проверяем разрешения на местоположение
-        if (ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            // Если разрешения есть, открываем Яндекс.Карты
-            if (getActivity() != null) {
-                ((MainActivity) getActivity()).openYandexMapsRoute(destination, station.getName());
-            }
-        } else {
-            // Запрашиваем разрешения
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_LOCATION_PERMISSION);
-        }
-    } */
     @Override
     public void onRouteClick(Station station) {
         GeoPoint destination = new GeoPoint(station.getLatitude(), station.getLongitude());
