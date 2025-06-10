@@ -24,9 +24,10 @@ import android.os.Handler;
 
 import models.Session;
 import models.SessionManager;
+import models.Station;
 import ui.viewmodels.StationViewModel;
 
-public class ActiveSessionFragment extends Fragment {
+public class ActiveSessionFragment extends BaseStationFragment {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable updateRunnable;
     private Session session;
@@ -76,6 +77,14 @@ public class ActiveSessionFragment extends Fragment {
             if (station != null) {
                 tvStationName.setText(station.getName());
                 setupFavoriteButton(station.getId());
+            }
+        });
+
+        // Добавляем кнопку "Маршрут"
+        View tvNav = view.findViewById(R.id.tv_nav);
+        tvNav.setOnClickListener(v -> {
+            if (session != null) {
+                onRouteClick(session.getStation()); // Используем станцию из сессии
             }
         });
 
@@ -160,5 +169,20 @@ public class ActiveSessionFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         handler.removeCallbacks(updateRunnable);
+    }
+
+    @Override
+    public void onStationClick(Station station) {
+
+    }
+
+    @Override
+    public void onFavoriteClick(Station station, int position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(Station station) {
+
     }
 }

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -33,13 +35,27 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
     private StationViewModel viewModel;
     private StationAdapter adapter;
     // Добавьте константу для запроса разрешений
-    private static final int REQUEST_LOCATION_PERMISSION = 1001;
+   // private static final int REQUEST_LOCATION_PERMISSION = 1001;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(StationViewModel.class);
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        Toast.makeText(requireContext(),
+                                "Разрешение получено. Нажмите на маршрут еще раз",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(requireContext(),
+                                "Для построения маршрута необходимо разрешение",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     @Override
@@ -98,42 +114,19 @@ public class ListFragment extends Fragment implements StationAdapter.OnStationCl
     public void onRouteClick(Station station) {
         GeoPoint destination = new GeoPoint(station.getLatitude(), station.getLongitude());
 
-        // Проверяем разрешения
         if (ContextCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            // Если разрешение есть, открываем Яндекс.Карты через Activity
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).openYandexMapsRoute(destination, station.getName());
             }
         } else {
-            // Запрашиваем разрешение
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_LOCATION_PERMISSION);
+            // Запрашиваем разрешение новым способом
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         }
     }
 
-    // Обработка результата запроса разрешений
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                // Разрешение получено, можно выполнить действие
-                Toast.makeText(requireContext(),
-                        "Разрешение получено. Нажмите на маршрут еще раз",
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(),
-                        "Для построения маршрута необходимо разрешение",
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-    }
     private void navigateToStationDetails(int stationId) {
         Bundle args = new Bundle();
         args.putInt("stationId", stationId);

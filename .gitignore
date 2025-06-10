@@ -11,7 +11,9 @@
 /build
 /app/release/app-release.apk
 /app/release
+/app/secrets.properties
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+gradle.properties

@@ -1,67 +1,78 @@
 package ui.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+
+import android.location.Location;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
+import android.net.NetworkCapabilities;
+
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-import android.view.Gravity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
+
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.caverock.androidsvg.BuildConfig;
 import com.example.myapplication.R;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.osmdroid.api.IGeoPoint;
+
 import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
-import org.osmdroid.util.BoundingBox;
+
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.MapTileIndex;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.Marker;
+
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.Polyline;
+
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+import data.api.ApiClient;
+import data.api.CoinDeskApiService;
+import data.api.CoinDeskResponse;
 import models.Station;
+import data.api.WeatherApiService;
+import data.api.WeatherResponse;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import ui.viewmodels.StationViewModel;
 
 public class MapFragment extends Fragment implements MapEventsReceiver {
@@ -71,8 +82,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
     private StationViewModel viewModel;
     private ItemizedIconOverlay<OverlayItem> stationsOverlay;
     private ImageButton btnMyLocation;
-    // Добавьте эти поля
-
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
 
     @Override
@@ -89,10 +100,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         // Находим элементы вью
         mapView = view.findViewById(R.id.mapView);
         btnMyLocation = view.findViewById(R.id.btnMyLocation);
-       // btnClearRoute = view.findViewById(R.id.btnClearRoute);
+        // btnClearRoute = view.findViewById(R.id.btnClearRoute);
 
         // Инициализация карты
         initializeMap();
+        //bitcoin
+        fetchBitcoinPrice();
 
         // Настройка ViewModel
         viewModel = new ViewModelProvider(requireActivity()).get(StationViewModel.class);
@@ -112,7 +125,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             }
         });
         // Кнопка "Очистка маршрута"
-       // btnClearRoute.setOnClickListener(v -> clearRoute());
+        // btnClearRoute.setOnClickListener(v -> clearRoute());
 
         viewModel.getRouteEndPoint().observe(getViewLifecycleOwner(), endPoint -> {
             if (endPoint != null && myLocationOverlay != null && myLocationOverlay.getMyLocation() != null) {
@@ -149,19 +162,29 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         mapView.setMultiTouchControls(true); // Лучше использовать жесты
 
+        mapView.getOverlays().add(new MapEventsOverlay(this));
+        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(requireContext()), mapView) {
+            @Override
+            public void onLocationChanged(Location location, IMyLocationProvider source) {
+                super.onLocationChanged(location, source);
+                if (location != null) {
+                    fetchWeather(location.getLatitude(), location.getLongitude());
+                }
+            }
+        };
+
+        //myLocationOverlay = new MyLocationNewOverlay(
+        //  new GpsMyLocationProvider(requireContext()), mapView);
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.setOptionsMenuEnabled(true);
+        mapView.getOverlays().add(myLocationOverlay);
+
         // Установка начального масштаба и положения
         mapView.getController().setZoom(19.0);
         mapView.getController().setCenter(new GeoPoint(56.010563, 92.852572)); // Красноярск по умолчанию
 
         requestPermissionsIfNecessary();
 
-        myLocationOverlay = new MyLocationNewOverlay(
-                new GpsMyLocationProvider(requireContext()), mapView);
-        myLocationOverlay.enableMyLocation();
-        myLocationOverlay.setOptionsMenuEnabled(true);
-        mapView.getOverlays().add(myLocationOverlay);
-
-        mapView.getOverlays().add(new MapEventsOverlay(this));
     }
 
     private void addStationsToMap(List<Station> stations) {
@@ -182,14 +205,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             // Устанавливаем иконку в зависимости от статуса
             switch (station.getStatus()) {
                 case "busy":
-                    item.setMarker(ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_busy));
-                    break;
                 case "Занято":
                     item.setMarker(ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_busy));
                     break;
                 case "free":
-                    item.setMarker(ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_free));
-                    break;
                 case "Свободно":
                     item.setMarker(ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_free));
                     break;
@@ -231,26 +250,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         mapView.getController().setCenter(firstStation);
     }
 
-    private void requestPermissionsIfNecessary() {
-        String[] permissions = {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
 
-        List<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(permission);
-            }
-        }
-
-        if (!permissionsToRequest.isEmpty()) {
-            ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
 
     private void navigateToStationDetails(int stationId) {
         try {
@@ -288,28 +288,26 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
 
     @Override
     public void onDestroyView() {
+        if (mapView != null) {
+            mapView.onDetach();
+            mapView = null;
+            btnMyLocation = null;
+        }
+
         super.onDestroyView();
         // Очищаем ссылки на вью
         mapView = null;
         btnMyLocation = null;
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        executor.shutdown(); // Завершаем фоновые задачи
+        handler.removeCallbacksAndMessages(null); // Удаляем все callback-и
         //routeExecutor.shutdownNow();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                myLocationOverlay.enableMyLocation();
-            } else {
-                Toast.makeText(requireContext(), "Для работы карты требуются разрешения", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     private void showProgress(boolean show) {
         requireView().findViewById(R.id.routeProgress).setVisibility(show ? View.VISIBLE : View.GONE);
@@ -318,16 +316,128 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager)requireContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+        NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+        return capabilities != null &&
+                (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
     }
-    /* Обработка поворота экрана
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (routeOverlay != null) {
-            outState.putSerializable("route_points", new ArrayList<>(routeOverlay.getPoints()));
+
+    /*private void fetchWeather(double lat, double lon) {
+        if (!isOnline()) {
+            Log.e("WeatherAPI", "No internet connection");
+            return;
         }
-    }*/
-    
+
+
+        // Безопасное получение ключа
+        // String apiKey = BuildConfig.WEATHER_API_KEY;
+        String apiKey = "WEATHER_API_KEY";
+
+        WeatherApiService service = ApiClient.getClient().create(WeatherApiService.class);
+        Call<WeatherResponse> call = service.getCurrentWeather(lat, lon, "metric", apiKey);
+
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<WeatherResponse> call, @NonNull Response<WeatherResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    updateWeatherUI(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<WeatherResponse> call, Throwable t) {
+                Log.e("WeatherAPI", "Error fetching weather", t);
+            }
+        });
+    }
+*/
+    private void fetchWeather(double lat, double lon) {
+        if (!isOnline()) {
+            Log.e("WeatherAPI", "No internet connection");
+            return;
+        }
+
+        executor.execute(() -> {
+            try {
+                String apiKey = "WEATHER_API_KEY";
+                WeatherApiService service = ApiClient.getClient().create(WeatherApiService.class);
+                Response<WeatherResponse> response = service.getCurrentWeather(lat, lon, "metric", apiKey).execute();
+
+                if (response.isSuccessful() && response.body() != null) {
+                    handler.post(() -> updateWeatherUI(response.body()));
+                }
+            } catch (IOException e) {
+                Log.e("WeatherAPI", "Error fetching weather", e);
+            }
+        });
+    }
+    private void updateWeatherUI(WeatherResponse weather) {
+        TextView tempText = getView().findViewById(R.id.temperatureText);
+        TextView descText = getView().findViewById(R.id.weatherDescription);
+        ImageView iconView = getView().findViewById(R.id.weatherIcon);
+
+        tempText.setText(String.format(Locale.getDefault(), "%.1f°C", weather.getMain().getTemperature()));
+        descText.setText(weather.getWeather().get(0).getDescription());
+
+        // Загрузка иконки погоды
+        String iconUrl = "https://openweathermap.org/img/wn/" +
+                weather.getWeather().get(0).getIcon() + "@2x.png";
+
+        Glide.with(this)
+                .load(iconUrl)
+                .into(iconView);
+    }
+
+    private final ActivityResultLauncher<String[]> locationPermissionRequest =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                Boolean fineLocationGranted = result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
+                if (fineLocationGranted != null && fineLocationGranted) {
+                    myLocationOverlay.enableMyLocation();
+                } else {
+                    Toast.makeText(requireContext(), "Для работы карты требуются разрешения", Toast.LENGTH_LONG).show();
+                }
+            });
+
+    private void requestPermissionsIfNecessary() {
+        locationPermissionRequest.launch(new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        });
+    }
+    // bitcoin
+    private void fetchBitcoinPrice() {
+        if (!isOnline()) {
+            return;
+        }
+
+        executor.execute(() -> {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://api.coindesk.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            CoinDeskApiService service = retrofit.create(CoinDeskApiService.class);
+            try {
+                Response<CoinDeskResponse> response = service.getCurrentBitcoinPrice().execute();
+                if (response.isSuccessful() && response.body() != null) {
+                    String price = response.body().getBpi().getUsd().getRate();
+                    handler.post(() -> updateBitcoinPriceUI(price)); // Возвращаемся в UI-поток
+                }
+            } catch (IOException e) {
+                Log.e("CoinDeskAPI", "Error in background", e);
+            }
+        });
+    }
+
+    private void updateBitcoinPriceUI(String price) {
+        // Предположим, что у вас есть TextView в разметке (добавьте его в fragment_map.xml)
+        TextView bitcoinPriceText = getView().findViewById(R.id.bitcoinPriceText);
+        if (bitcoinPriceText != null) {
+            bitcoinPriceText.setText("BTC: $" + price);
+        }
+    }
 }
+
+
+

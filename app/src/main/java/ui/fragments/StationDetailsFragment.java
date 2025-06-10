@@ -24,10 +24,25 @@ import com.example.myapplication.R;
 
 import models.Station;
 import ui.viewmodels.StationViewModel;
-public class StationDetailsFragment extends Fragment {
+public class StationDetailsFragment extends BaseStationFragment {
     private int stationId;
     private StationViewModel viewModel;
     private OnStartChargingListener listener;
+
+    @Override
+    public void onStationClick(Station station) {
+
+    }
+
+    @Override
+    public void onFavoriteClick(Station station, int position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(Station station) {
+
+    }
 
     public interface OnStartChargingListener {
         void onStartCharging(int stationId);
@@ -109,6 +124,15 @@ public class StationDetailsFragment extends Fragment {
             Bundle args = new Bundle();
             args.putInt("stationId", stationId);
             Navigation.findNavController(v).navigate(R.id.mapFragment, args);
+        });
+        // Добавляем кнопку "Маршрут"
+        View tvNav = view.findViewById(R.id.tv_nav);
+        tvNav.setOnClickListener(v -> {
+            viewModel.getStationById(stationId).observe(getViewLifecycleOwner(), station -> {
+                if (station != null) {
+                    onRouteClick(station); // Вызов метода из BaseFragment
+                }
+            });
         });
     }
 

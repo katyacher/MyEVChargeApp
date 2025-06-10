@@ -24,6 +24,7 @@ android {
             }
         }
 
+
     }
 
     buildTypes {
@@ -35,6 +36,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -73,6 +75,10 @@ dependencies {
     // Retrofit (для API погоды)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+
+    // Glide для загрузки иконок погоды
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
     // Room (для локальной БД)
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
@@ -80,23 +86,15 @@ dependencies {
     // Навигация между экранами
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    implementation ("androidx.cardview:cardview:1.0.0")
+    implementation (libs.androidx.cardview)
     implementation ("androidx.fragment:fragment:1.6.2")
     // RecyclerView
     implementation ("androidx.recyclerview:recyclerview:1.3.2")
     // ViewModel и LiveData
-    implementation ("androidx.lifecycle:lifecycle-viewmodel:2.9.1")
-    implementation ("androidx.lifecycle:lifecycle-livedata:2.9.1")
+    implementation (libs.androidx.lifecycle.viewmodel)
+    implementation (libs.androidx.lifecycle.livedata)
 
-   // implementation ("org.osmdroid:osmdroid-android:6.1.13")
-   // implementation ("org.osmdroid:osmdroid-wms:6.1.13")
-   // implementation ("org.osmdroid:osmdroid-mapsforge:6.1.13") // Для оффлайн-карт (опционально)
-   // implementation ("com.github.MKergall:osmbonuspack:6.9.0") {
-   //     exclude(group = "org.osmdroid") // Чтобы избежать конфликтов версий
-   // }// Дополнительные функции (маркеры и т.д.)
-    // Для загрузки иконок
-   // implementation("com.github.bumptech.glide:glide:4.12.0")
-   // annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
     // OSMDroid core
     implementation("org.osmdroid:osmdroid-android:6.1.14")
 
@@ -112,4 +110,6 @@ dependencies {
     // Для загрузки иконок
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    implementation (libs.secrets.gradle.plugin)
 }

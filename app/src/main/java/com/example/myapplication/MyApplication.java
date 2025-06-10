@@ -36,8 +36,8 @@ public class MyApplication extends Application {
         );
         super.onTerminate();
     }
-    @Override
-    public void onTrimMemory(int level) {
+    /* @Override
+   public void onTrimMemory(int level) {
         // Сохраняем настройки OSMDroid перед завершением приложения для современных версий Android
         if (level == ComponentCallbacks2.TRIM_MEMORY_COMPLETE) {
             Configuration.getInstance().save(
@@ -46,5 +46,5 @@ public class MyApplication extends Application {
             );
         }
         super.onTrimMemory(level);
-    }
+    } */
 }

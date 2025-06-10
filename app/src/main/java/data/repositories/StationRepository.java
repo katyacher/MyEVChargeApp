@@ -17,8 +17,8 @@ import data.db.StationDao;
 import models.Station;
 
 public class StationRepository {
-    private StationDao stationDao;
-    private Executor executor;
+    private final StationDao stationDao;
+    private final Executor executor;
 
     public StationRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
@@ -85,5 +85,6 @@ public class StationRepository {
     public  LiveData<Station> getStationByIdLive(int stationId) {
         return stationDao.getStationByIdLive(stationId);  // возвращает LiveData
     }
+
 }
 
